@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="#F3F3F3">
+
+    <!-- icon -->
+    <ImageView
+        android:id="@+id/item_play"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_play_arrow_black_24dp"
+        />
+    <!-- Reproducciones -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/num_repro"
+        android:textSize="18dp"
+        android:inputType="number"
+        android:text="0"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_play" />
+    <!-- title -->
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A very long song title.mp3"
+        android:textSize="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_alignTop="@+id/num_repro"
+        android:layout_toEndOf="@+id/num_repro" />
+    <!--Favoritos-->
+    <ImageView
+        android:id="@+id/item_fav"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_favorite_border_black_24dp"
+        />
 
 </RelativeLayout>
