@@ -7,3 +7,5 @@
 /build
 /captures
 build.gradle
+.idea/misc.xml
+build.gradle
