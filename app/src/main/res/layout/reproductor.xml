@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="@+id/reproductor">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:backgroundTint="#FFCC00"
+        android:background="?attr/colorPrimary" />
+
+
+    <include layout="@layout/content_main"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="90dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="20dp"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:text="Reproductor"/>
+
+    <TextView
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:textAlignment="center"
+        android:paddingTop="2dp"
+        android:background="#CCCCCC"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:text="Playlist:EDM "/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:layout_marginLeft="325dp"
+        android:background="#FFFFFF"
+        android:src="@drawable/ic_view_list_black_24dp"
+        />
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:background="#FFCC00"
+        android:layout_marginTop="17dp"
+        android:layout_marginStart="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_menu_black_18dp"
+        />
+
+    <ImageView
+        android:layout_marginTop="140dp"
+        android:layout_marginStart="40dp"
+        android:layout_width="300dp"
+        android:src="@drawable/caratula"
+        android:layout_height="300dp" />
+
+    <TextView
+        android:layout_marginTop="460dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="14dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="4dp"
+        android:background="#FFCC00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:text="2BeManiacs "/>
+
+    <TextView
+        android:layout_marginTop="485dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="14dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="4dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:textColor="#000000"
+        android:text="La solero "/>
+
+    <ImageButton
+        android:layout_marginTop="464dp"
+        android:layout_marginLeft="310dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="#FFCC00"
+        android:src="@drawable/ic_favorite_black_24dp"
+        />
+
+    <!-- minutos de la cancion -->
+    <TextView
+        android:layout_marginTop="485dp"
+        android:layout_marginLeft="270dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="0dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="4dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:text="3:15 "/>
+
+
+    <TextView
+        android:layout_marginTop="525dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:paddingLeft="14dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="4dp"
+        android:background="#FFFF44"
+        />
+
+    <ImageButton
+        android:layout_marginTop="464dp"
+        android:layout_marginLeft="310dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="#FFCC00"
+        android:src="@drawable/ic_favorite_black_24dp"
+        />
+
+    <TextView
+        android:layout_marginTop="520dp"
+        android:layout_width="300dp"
+        android:layout_height="5dp"
+        android:paddingLeft="14dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="4dp"
+        android:background="#FFAA00"
+        />
+
+    <ImageButton
+        android:layout_marginTop="525dp"
+        android:layout_marginLeft="60dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="#FFFF44"
+        android:src="@drawable/ic_fast_rewind_black_18dp"
+        />
+
+    <ImageButton
+        android:layout_marginTop="525dp"
+        android:layout_marginLeft="150dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="#FFFF44"
+        android:src="@drawable/ic_play_arrow_black_18dp"
+        />
+
+    <ImageButton
+        android:layout_marginTop="525dp"
+        android:layout_marginLeft="240dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="#FFFF44"
+        android:src="@drawable/ic_fast_forward_black_18dp"
+        />
+
+</android.support.design.widget.CoordinatorLayout>
