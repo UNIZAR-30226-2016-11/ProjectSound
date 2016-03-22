@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/degradado"
+        android:layout_width="303dp"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="107dp"
+            android:layout_height="90dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/logo"
+            android:layout_weight="0.04" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="PROJECT SOUND"
+            android:textColor="#FFCC00"
+            android:textSize="35sp"
+            android:id="@+id/nameApp" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_height="2dp"
+            android:background="@android:color/white"/>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:id="@+id/one"
+            android:clickable="true"
+            android:onClick="repClick"
+            >
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/ic_album_black_48dp"
+                android:id="@+id/imageView2" />
+            <TextView
+                android:text="Reproductor"
+                android:layout_marginTop="22dp"
+                android:layout_marginLeft="12dp"
+                android:textSize="30sp"
+                android:id="@+id/reproductor"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:clickable="true"
+            android:id="@+id/two"
+            android:onClick="addMusic">
+
+
+            <ImageView
+                android:layout_width="58dp"
+                android:layout_height="61dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_add_black_48dp"
+                android:id="@+id/imageView3" />
+            <TextView
+                android:text="Añadir canciones"
+                android:layout_marginTop="22dp"
+                android:layout_marginLeft="7dp"
+                android:textSize="30sp"
+                android:id="@+id/canciones"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:id="@+id/three"
+            android:clickable="true"
+            android:onClick="playClick">
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/ic_queue_music_black_48dp"
+                android:id="@+id/imageView4" />
+            <TextView
+                android:text="Mis playlists"
+                android:layout_marginTop="22dp"
+                android:layout_marginLeft="12dp"
+                android:textSize="30sp"
+                android:id="@+id/playlists"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:id="@+id/four"
+            android:clickable="true"
+            android:onClick="favClick">
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="58dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/ic_favorite_black_48dp"
+                android:id="@+id/imageView5" />
+            <TextView
+                android:text="Mis favoritos"
+                android:layout_marginTop="22dp"
+                android:layout_marginLeft="12dp"
+                android:textSize="30sp"
+                android:id="@+id/favoritos"
+                />
+        </TableRow>
+
+    </LinearLayout>
+
+
+</LinearLayout>
