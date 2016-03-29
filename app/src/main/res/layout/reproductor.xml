@@ -57,7 +57,7 @@
         android:layout_marginTop="17dp"
         android:layout_marginStart="20dp"
         android:clickable="true"
-        android:src="@drawable/ic_menu_black_18dp"
+        android:src="@drawable/ic_menu_black_24dp"
         />
 
     <ImageView
@@ -154,7 +154,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:background="#FFFF44"
-        android:src="@drawable/ic_fast_rewind_black_18dp"
+        android:src="@drawable/ic_fast_rewind_black_24dp"
         />
 
     <ImageButton
@@ -164,7 +164,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:background="#FFFF44"
-        android:src="@drawable/ic_play_arrow_black_18dp"
+        android:src="@drawable/ic_play_arrow_black_24dp"
         />
 
     <ImageButton
@@ -174,7 +174,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:background="#FFFF44"
-        android:src="@drawable/ic_fast_forward_black_18dp"
+        android:src="@drawable/ic_fast_forward_black_24dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>
