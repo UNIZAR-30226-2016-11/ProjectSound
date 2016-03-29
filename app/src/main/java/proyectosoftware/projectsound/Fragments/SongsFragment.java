@@ -35,6 +35,7 @@ public class SongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_layout, container, false);
+        getActivity().setTitle("Canciones");
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("TODAS"));
         tabs.addTab(tabs.newTab().setText("DURACIÓN"));
