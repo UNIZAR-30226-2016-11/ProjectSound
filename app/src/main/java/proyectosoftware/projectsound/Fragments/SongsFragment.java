@@ -1,4 +1,4 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.Fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import proyectosoftware.projectsound.R;
 
 /**
  * Fragmento para el contenido principal
@@ -34,7 +36,7 @@ public class SongsFragment extends Fragment {
      * @param sectionTitle Título usado en el contenido
      * @return Instancia dle fragmento
      */
-    public static SongsFragment newInstance(String sectionTitle, int layout) {
+    public static SongsFragment newInstance(String sectionTitle) {
         SongsFragment fragment = new SongsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SECTION_TITLE, sectionTitle);
@@ -47,12 +49,11 @@ public class SongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int layout = getArguments().getInt(ARG_LAYOUT);
-        View view = inflater.inflate(layout, container, false);
-
+        View view = inflater.inflate(R.layout.song_layout, container, false);
         // Ubicar argumento en el text view de section_fragment.xml
         String title = getArguments().getString(ARG_SECTION_TITLE);
         TextView titulo = (TextView) view.findViewById(R.id.title);
-        titulo.setText(title);
+        //titulo.setText(title);
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("TODAS"));
         tabs.addTab(tabs.newTab().setText("DURACIÓN"));
@@ -62,7 +63,7 @@ public class SongsFragment extends Fragment {
         canciones.add("C1");
         canciones.add("C2");
         ListView listView_songs = (ListView) view.findViewById(R.id.listview_canciones);
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), R.layout.song_row, canciones);
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(),  android.R.layout.simple_list_item_1, canciones);
         listView_songs.setAdapter(adaptador);
         tabs.setOnTabSelectedListener(
                 new TabLayout.OnTabSelectedListener() {
