@@ -17,7 +17,7 @@ public class Canciones extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_song_layout);
+        setContentView(R.layout.song_layout);
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("TODAS"));
         tabs.addTab(tabs.newTab().setText("DURACIÓN"));
