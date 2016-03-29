@@ -3,6 +3,7 @@ package proyectosoftware.projectsound.Fragments;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,30 +31,10 @@ public class SongsFragment extends Fragment {
     public SongsFragment() {
     }
 
-    /**
-     * Crea una instancia prefabricada de {@link SongsFragment}
-     *
-     * @param sectionTitle Título usado en el contenido
-     * @return Instancia dle fragmento
-     */
-    public static SongsFragment newInstance(String sectionTitle) {
-        SongsFragment fragment = new SongsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_SECTION_TITLE, sectionTitle);
-        args.putInt(ARG_LAYOUT, R.layout.song_layout);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int layout = getArguments().getInt(ARG_LAYOUT);
         View view = inflater.inflate(R.layout.song_layout, container, false);
-        // Ubicar argumento en el text view de section_fragment.xml
-        String title = getArguments().getString(ARG_SECTION_TITLE);
-        TextView titulo = (TextView) view.findViewById(R.id.title);
-        //titulo.setText(title);
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("TODAS"));
         tabs.addTab(tabs.newTab().setText("DURACIÓN"));
