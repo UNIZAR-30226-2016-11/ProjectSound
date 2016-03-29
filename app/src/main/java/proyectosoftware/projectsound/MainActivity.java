@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import proyectosoftware.projectsound.Fragments.AddToPlayListFragment;
 import proyectosoftware.projectsound.Fragments.PlayerFragment;
 import proyectosoftware.projectsound.Fragments.SongsFragment;
 
@@ -101,10 +102,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_favoritos:
                 break;
-            //TODO borrar esta opcion cuando no se necesite
+            //TODO borrar estas opciones cuando no se necesite
             case R.id.nav_song_list:
                 f = new SongsFragment();
                 break;
+            case R.id.nav_add_to_playlist:
+                f = new AddToPlayListFragment();
         }
         f.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();
