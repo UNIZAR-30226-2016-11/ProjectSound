@@ -1,7 +1,6 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.CustomAdapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import proyectosoftware.projectsound.R;
+import proyectosoftware.projectsound.Tipos.Song;
 
 /**
  * Created by novales35 on 30/03/16.

@@ -1,4 +1,4 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.CustomAdapters;
 
 
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import android.widget.BaseAdapter;
 /**
  * Created by dani on 9/03/16.
  */
-public abstract class Playlist_adapter extends BaseAdapter{
+public abstract class PlaylistAdapter extends BaseAdapter{
     private ArrayList<?> entradasPlaylist;
     private int R_layout_IdView;
     private Context contexto;
 
-    public Playlist_adapter(Context contexto, int R_layout_IdView, ArrayList<?> entradas) {
+    public PlaylistAdapter(Context contexto, int R_layout_IdView, ArrayList<?> entradas) {
         super();
         this.contexto = contexto;
         this.entradasPlaylist = entradas;

@@ -1,15 +1,15 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.Tipos;
 
 /**
  * Created by dani on 9/03/16.
  */
-public class Playlist_entrada {
+public class Playlist {
     private int idImagenPlaylist;
     private String tituloPlaylist;
     private String numCancionesPlaylist;
     private String duracionPlaylist;
 
-    public Playlist_entrada(int idImagenPlaylist, String tituloPlaylist, String numCancionesPlaylist, String duracionPlaylist){
+    public Playlist(int idImagenPlaylist, String tituloPlaylist, String numCancionesPlaylist, String duracionPlaylist){
         this.idImagenPlaylist = idImagenPlaylist;
         this.tituloPlaylist = tituloPlaylist;
         this.numCancionesPlaylist = numCancionesPlaylist;

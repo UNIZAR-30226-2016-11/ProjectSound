@@ -1,17 +1,17 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.CustomAdapters;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import proyectosoftware.projectsound.SQLiteRelacional;
+
 /**
  * Created by Guillermo on 9/03/16.
  */
-public class DbAdapter extends SQLiteRelacional{
+public class DbAdapter extends SQLiteRelacional {
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;

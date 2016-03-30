@@ -3,10 +3,6 @@ package proyectosoftware.projectsound;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,8 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.Fragments.AddToPlayListFragment;
 import proyectosoftware.projectsound.Fragments.PlayerFragment;
+import proyectosoftware.projectsound.Fragments.PlaylistsFragment;
 import proyectosoftware.projectsound.Fragments.SongsFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -102,6 +100,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_añadir_canciones:
                 break;
             case R.id.nav_playlists:
+                f = new PlaylistsFragment();
                 break;
             case R.id.nav_favoritos:
                 break;

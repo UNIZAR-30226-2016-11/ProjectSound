@@ -1,4 +1,4 @@
-package proyectosoftware.projectsound;
+package proyectosoftware.projectsound.Tipos;
 
 import android.database.Cursor;
 import android.util.StringBuilderPrinter;
