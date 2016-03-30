@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import proyectosoftware.projectsound.R;
+import proyectosoftware.projectsound.Song;
+import proyectosoftware.projectsound.SongAdapter;
 
 /**
  * Fragmento para el contenido principal
@@ -41,11 +43,13 @@ public class SongsFragment extends Fragment {
         tabs.addTab(tabs.newTab().setText("DURACIÓN"));
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-        List<String> canciones = new ArrayList<String>();
-        canciones.add("C1");
-        canciones.add("C2");
+        ArrayList<Song> canciones = new ArrayList<Song>();
+        canciones.add(new Song("Canción 1","",false,1,1));
+        canciones.add(new Song("Canción 2","",true,2,2));
+        //canciones.add("C1");
+        //canciones.add("C2");
         ListView listView_songs = (ListView) view.findViewById(R.id.listview_canciones);
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(),  android.R.layout.simple_list_item_1, canciones);
+        SongAdapter adaptador = new SongAdapter(view.getContext(), canciones);
         listView_songs.setAdapter(adaptador);
         tabs.setOnTabSelectedListener(
                 new TabLayout.OnTabSelectedListener() {
@@ -67,5 +71,4 @@ public class SongsFragment extends Fragment {
         );
         return view;
     }
-
 }
