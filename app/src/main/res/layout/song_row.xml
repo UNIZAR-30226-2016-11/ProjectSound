@@ -22,10 +22,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/num_repro"
         android:textSize="18dp"
-        android:inputType="number"
         android:text="0"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/item_play" />
+        android:layout_toEndOf="@+id/item_play"
+        android:layout_marginTop="10dp"/>
     <!-- title -->
     <TextView
         android:id="@+id/item_title"
@@ -36,17 +36,18 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_alignTop="@+id/num_repro"
-        android:layout_toEndOf="@+id/num_repro" />
+        android:layout_toEndOf="@+id/num_repro"
+        android:layout_marginTop="10dp"/>
     <!--Favoritos-->
     <ImageView
         android:id="@+id/item_fav"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:src="@drawable/ic_favorite_border_black_24dp"
         />
 
