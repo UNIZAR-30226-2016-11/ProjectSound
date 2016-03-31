@@ -3,33 +3,29 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_reproductor"
+            android:icon="@drawable/ic_album_black_48dp"
+            android:title="Reproductor" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_añadir_canciones"
+            android:icon="@drawable/ic_add_black_48dp"
+            android:title="Añadir canciones" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_playlists"
+            android:icon="@drawable/ic_queue_music_black_48dp"
+            android:title="Playlists" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_favoritos"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="Mis favoritos" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Debug">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_add_to_playlist"
+                android:icon="@drawable/ic_queue_music_black_48dp"
+                android:title="Añadir al playlist" />
         </menu>
     </item>
 
