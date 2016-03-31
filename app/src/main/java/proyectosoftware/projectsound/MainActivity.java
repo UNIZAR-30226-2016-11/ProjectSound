@@ -1,5 +1,7 @@
 package proyectosoftware.projectsound;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -11,9 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.Fragments.AddToPlayListFragment;
+import proyectosoftware.projectsound.Fragments.FileSelectorFragment;
 import proyectosoftware.projectsound.Fragments.PlayerFragment;
 import proyectosoftware.projectsound.Fragments.PlaylistsFragment;
 import proyectosoftware.projectsound.Fragments.SongsFragment;
@@ -21,6 +25,8 @@ import proyectosoftware.projectsound.Fragments.SongsFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private static final int FILE_SELECT_CODE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,7 @@ public class MainActivity extends AppCompatActivity
                 f = new PlayerFragment();
                 break;
             case R.id.nav_añadir_canciones:
+                f = new FileSelectorFragment();
                 break;
             case R.id.nav_playlists:
                 f = new PlaylistsFragment();
@@ -117,5 +124,37 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //intent.setAction(Intent.ACTION_PICK);
+        intent.setType("audio/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Selecciona los archivos"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Es necesario un explorador de ficheros para realizar esta acción.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+                    Toast.makeText(this,uri.toString(),Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
