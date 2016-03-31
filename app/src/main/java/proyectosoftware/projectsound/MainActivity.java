@@ -126,35 +126,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void showFileChooser() {
-        Intent intent = new Intent();
-
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        //intent.setAction(Intent.ACTION_PICK);
-        intent.setType("audio/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Selecciona los archivos"),
-                    FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(this, "Es necesario un explorador de ficheros para realizar esta acción.",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case FILE_SELECT_CODE:
-                if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
-                    Uri uri = data.getData();
-                    Toast.makeText(this,uri.toString(),Toast.LENGTH_LONG).show();
-                }
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }
