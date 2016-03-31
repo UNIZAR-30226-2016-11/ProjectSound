@@ -1,7 +1,10 @@
 package proyectosoftware.projectsound.Tipos;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.util.StringBuilderPrinter;
+
+import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 
 /**
  * Created by novales35 on 30/03/16.
@@ -19,9 +22,6 @@ public class Song {
         this.num_reproductions=num_reproductions;
     }
 
-    public Song(Cursor c){
-        //TODO
-    }
     public String getTitle(){
         return title;
     }
@@ -31,8 +31,13 @@ public class Song {
     public boolean getIsFavorite(){
         return isFavorite;
     }
-    public void setIsFavorite(boolean isFavorite){
+    public void setIsFavorite(boolean isFavorite, Context ctx){
         this.isFavorite=isFavorite;
+        DbAdapter mDb = new DbAdapter(ctx);
+        mDb.open();
+        mDb.updateFavorite(path,isFavorite);
+        mDb.close();
+
     }
     public int getDuration_seconds(){
         return duration_seconds;
