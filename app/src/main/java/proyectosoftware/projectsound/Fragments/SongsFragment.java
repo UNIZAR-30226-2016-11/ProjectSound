@@ -1,19 +1,26 @@
 package proyectosoftware.projectsound.Fragments;
 
+
+import android.app.SearchManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -50,6 +57,7 @@ public class SongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_layout, container, false);
+        setHasOptionsMenu(true);
         canciones = new ArrayList<Song>();
         //Ponemos el titulo a la pestaña
         getActivity().setTitle(getArguments().getString(ARG_PLAYLIST));
@@ -177,4 +185,34 @@ public class SongsFragment extends Fragment {
             } );
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.search, menu);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSubmitButtonEnabled(false);
+        searchView.setQueryHint("Búsqueda");
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                ListView listView = (ListView) getActivity().findViewById(R.id.listview_canciones);
+                listView.setTextFilterEnabled(true);
+                adaptador.restore();
+                adaptador.getFilter().filter(s);
+                return true;
+            }
+        };
+
+        searchView.setOnQueryTextListener(queryTextListener);
+    }
+
+
 }
