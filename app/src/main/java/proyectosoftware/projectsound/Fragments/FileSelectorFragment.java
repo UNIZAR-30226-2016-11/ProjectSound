@@ -16,14 +16,16 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.R;
+import proyectosoftware.projectsound.SQLiteRelacional;
 
 
 public class FileSelectorFragment extends Fragment {
 
     private ArrayList<String> canciones = new ArrayList<String>();
     private ArrayList<String> rutas = new ArrayList<String>();
-
+    private DbAdapter mDb;
     public FileSelectorFragment() {
     }
 
@@ -35,20 +37,35 @@ public class FileSelectorFragment extends Fragment {
 
         if (mCursor.moveToFirst()) {
             do {
-                //TODO verificar que no está en la base de datos
                 canciones.add(mCursor.getString(0));
                 rutas.add(mCursor.getString(1));
             } while (mCursor.moveToNext());
         }
 
         mCursor.close();
+        purgeMusicFromDatabase();
     }
-
+    private void purgeMusicFromDatabase(){
+        Cursor mCursor = mDb.getAllCancion();
+        if (mCursor.moveToFirst()) {
+            do {
+                String item = mCursor.getString(mCursor.getColumnIndex(mDb.KEY_RUTA));
+                if(rutas.contains(item)){
+                    int position = rutas.indexOf(item);
+                    rutas.remove(position);
+                    canciones.remove(position);
+                }
+            } while (mCursor.moveToNext());
+        }
+        mCursor.close();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fileselector_layout, container, false);
         getActivity().setTitle("Añadir canciones");
+        mDb = new DbAdapter(view.getContext());
+        mDb.open();
         final ListView listview = (ListView) view.findViewById(R.id.fileSelector_listView);
         listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         getMusic();
@@ -77,13 +94,13 @@ public class FileSelectorFragment extends Fragment {
                 }
                 for (String s : selectedItems) {
                     Toast.makeText(v.getContext(), s, Toast.LENGTH_SHORT).show();
-                    //TODO hacer insert en la base de datos
+                    mDb.insertCancion(s,s.substring(s.lastIndexOf('/')+1,s.length()),0,1,0);
+                    //TODO hacer insert completo en la base de datos
                 }
                 listview.clearChoices();
                 listas.notifyDataSetChanged();
             }
         });
-
         return view;
     }
 }
