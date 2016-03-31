@@ -114,9 +114,6 @@ public class MainActivity extends AppCompatActivity
                 f = new SongsFragment();
                 break;
             //TODO borrar estas opciones cuando no se necesite
-            case R.id.nav_song_list:
-                f = new SongsFragment();
-                break;
             case R.id.nav_add_to_playlist:
                 f = new AddToPlayListFragment();
         }
