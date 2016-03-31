@@ -5,7 +5,7 @@
     <color name="add_to_playlist_namePlaylist">#AED581</color>
     <color name="Dark">#000000</color>
     <color name="Grey">#424242</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#DDAA00</color>
+    <color name="colorAccent">#5F1441</color>
     <color name="black">#000000</color>
 </resources>
