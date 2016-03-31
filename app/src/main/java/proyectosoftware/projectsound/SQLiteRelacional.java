@@ -5,21 +5,21 @@ package proyectosoftware.projectsound;
  */
 public class SQLiteRelacional {
 
-    protected static final String DATABASE_NAME = "data";
-    protected static final String KEY_TITULO = "titulo";
-    protected static final String KEY_RUTA = "ruta";
-    protected static final String KEY_REPRODUCCIONES = "reproducciones";
-    protected static final String KEY_FAVORITO = "favorita";
-    protected static final String KEY_DURACION = "duracion";
-    protected static final String DATABASE_TABLE_CANCION = "CANCION";
-    protected static final String KEY_NOMBRE_PLAYLIST = "nombre";
-    protected static final String KEY_DURACION_PLAYLIST = "duracion";
-    protected static final String KEY_NUM_CANCIONES = "num_canciones";
-    protected static final String DATABASE_TABLE_PLAYLIST = "PLAYLIST";
-    protected static final String DATABASE_TABLE_PERTENECE = "PERTENECE";
-    protected static final String KEY_CANCION_PERTENECE = "CANCION_ruta";
-    protected static final String KEY_NOM_PLAYLIST_PERTENCE = "PLAYLIST_nombre";
-    protected static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "data";
+    public static final String KEY_TITULO = "titulo";
+    public static final String KEY_RUTA = "ruta";
+    public static final String KEY_REPRODUCCIONES = "reproducciones";
+    public static final String KEY_FAVORITO = "favorita";
+    public static final String KEY_DURACION = "duracion";
+    public static final String DATABASE_TABLE_CANCION = "CANCION";
+    public static final String KEY_NOMBRE_PLAYLIST = "nombre";
+    public static final String KEY_DURACION_PLAYLIST = "duracion";
+    public static final String KEY_NUM_CANCIONES = "num_canciones";
+    public static final String DATABASE_TABLE_PLAYLIST = "PLAYLIST";
+    public static final String DATABASE_TABLE_PERTENECE = "PERTENECE";
+    public static final String KEY_CANCION_PERTENECE = "CANCION_ruta";
+    public static final String KEY_NOM_PLAYLIST_PERTENCE = "PLAYLIST_nombre";
+    public static final int DATABASE_VERSION = 2;
 
     /**
      * Database creation sql statement
@@ -27,7 +27,7 @@ public class SQLiteRelacional {
     protected static final String DATABASE_CREATE_CANCION =
             "create table "+DATABASE_TABLE_CANCION+" ("+KEY_RUTA+" text primary key, "
                     + KEY_TITULO+" text not null,"+KEY_REPRODUCCIONES+" integer not null, "+KEY_DURACION+" integer not null,"
-                    + KEY_FAVORITO+"integer not null);";
+                    + KEY_FAVORITO+" integer not null);";
     protected static final String DATABASE_CREATE_PLAYLIST =
             "create table "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" text primary key,"
                     + KEY_DURACION_PLAYLIST+" integer not null,"+KEY_NUM_CANCIONES+" integer not null);";
