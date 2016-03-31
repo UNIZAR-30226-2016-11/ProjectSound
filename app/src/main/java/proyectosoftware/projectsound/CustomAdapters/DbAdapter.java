@@ -1,6 +1,8 @@
 package proyectosoftware.projectsound.CustomAdapters;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,8 +16,8 @@ import proyectosoftware.projectsound.SQLiteRelacional;
 public class DbAdapter extends SQLiteRelacional {
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
+    private static SQLiteDatabase mDb;
+    private static final String TAG =" DBADAPTER";
     /**
      * Constructor - takes the context to allow the database to be
      * opened/created
@@ -27,7 +29,7 @@ public class DbAdapter extends SQLiteRelacional {
     }
 
     /**
-     * Open the notes database. If it cannot be opened, try to create a new
+     * Open the database. If it cannot be opened, try to create a new
      * instance of the database. If it cannot be created, throw an exception to
      * signal the failure
      *
@@ -58,7 +60,12 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(DATABASE_CREATE_PERTENECE);
             db.execSQL(INSERT_PLAYLIST_TODAS);
             db.execSQL(INSERT_PLAYLIST_FAVORITOS);
-            Log.d("SQLite","DATABASES CREATED");
+            Log.d("SQLite", DATABASE_CREATE_CANCION);
+            Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
+            Log.d("SQLite", DATABASE_CREATE_PERTENECE);
+            Log.d("SQLite", INSERT_PLAYLIST_TODAS);
+            Log.d("SQLite", INSERT_PLAYLIST_FAVORITOS);
+            Log.d("SQLite", "DATABASES CREATED");
         }
 
         @Override
@@ -69,4 +76,23 @@ public class DbAdapter extends SQLiteRelacional {
             onCreate(db);
         }
     }
+        public long insertCancion(String path, String titulo, int favoritos,int duracion,int reproducciones){
+            if(path.length()>0 && titulo.length()>0 && (favoritos==0 || favoritos==1) && duracion>0 && reproducciones>=0){
+                ContentValues initialValues = new ContentValues();
+                initialValues.put(KEY_RUTA,path);
+                initialValues.put(KEY_TITULO, titulo);
+                initialValues.put(KEY_FAVORITO,favoritos);
+                initialValues.put(KEY_DURACION,duracion);
+                initialValues.put(KEY_REPRODUCCIONES,reproducciones);
+
+                return mDb.insert(DATABASE_TABLE_CANCION, null, initialValues);
+            }else{
+                Log.d(TAG,"Insercción erronea ("+path+","+titulo+","+favoritos+","+duracion+","+reproducciones);
+                return -1;
+            }
+        }
+        public Cursor getAllCancion() {
+            return mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, null, null,null , null,KEY_RUTA);
+        }
+
 }
