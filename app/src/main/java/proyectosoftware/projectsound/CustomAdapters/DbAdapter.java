@@ -92,7 +92,17 @@ public class DbAdapter extends SQLiteRelacional {
             }
         }
         public Cursor getAllCancion() {
-            return mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, null, null,null , null,KEY_RUTA);
+            return mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, null, null,null , null,KEY_TITULO);
         }
+    public Cursor getAllFromPlaylist(String playlist){
+        switch (playlist){
+            case DEFAULT_PLAYLIST_TODAS:
+                return getAllCancion();
+            case DEFAULT_PLAYLIST_FAVORITOS:
+                return  mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, KEY_FAVORITO+" = 1", null,null , null,KEY_TITULO);
+            default:
+                return null;
+        }
+    }
 
 }
