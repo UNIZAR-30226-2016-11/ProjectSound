@@ -48,6 +48,7 @@ public class FileSelectorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fileselector_layout, container, false);
+        getActivity().setTitle("Añadir canciones");
         final ListView listview = (ListView) view.findViewById(R.id.fileSelector_listView);
         listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         getMusic();
