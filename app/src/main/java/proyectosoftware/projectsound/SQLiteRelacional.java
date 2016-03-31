@@ -36,4 +36,8 @@ public class SQLiteRelacional {
                     + KEY_NOM_PLAYLIST_PERTENCE+" TEXT, "
                     + "FOREIGN KEY ("+KEY_CANCION_PERTENECE+") REFERENCES "+DATABASE_TABLE_CANCION+"("+KEY_RUTA+"),"
                     + "FOREIGN KEY ("+KEY_NOM_PLAYLIST_PERTENCE+") REFERENCES "+DATABASE_TABLE_PLAYLIST+"("+KEY_NOMBRE_PLAYLIST+"));";
+    protected static final String INSERT_PLAYLIST_TODAS =
+            "insert into "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" , "+KEY_DURACION_PLAYLIST+" , "+KEY_NUM_CANCIONES+") values ( 'Todas' , 0 , 0 );";
+    protected static final String INSERT_PLAYLIST_FAVORITOS=
+            "insert into "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" , "+KEY_DURACION_PLAYLIST+" , "+KEY_NUM_CANCIONES+") values ( 'Favoritos' , 0 , 0 );";
 }

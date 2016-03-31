@@ -56,6 +56,8 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(DATABASE_CREATE_CANCION);
             db.execSQL(DATABASE_CREATE_PLAYLIST);
             db.execSQL(DATABASE_CREATE_PERTENECE);
+            db.execSQL(INSERT_PLAYLIST_TODAS);
+            db.execSQL(INSERT_PLAYLIST_FAVORITOS);
             Log.d("SQLite","DATABASES CREATED");
         }
 
