@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.R;
@@ -28,17 +31,17 @@ import proyectosoftware.projectsound.CustomAdapters.SongAdapter;
  * Fragmento para el contenido principal
  */
 public class SongsFragment extends Fragment {
-    /**
-     * Este argumento del fragmento representa el título de cada
-     * sección
-     */
-    public static final String ARG_SECTION_TITLE = "section_number";
+
     public static final String ARG_PLAYLIST = "play";
     private DbAdapter mDb;
     private static SongAdapter adaptador;
+    private static ArrayList<Song> canciones;
     private final int MENU_CONTEXT_DELETE_FROM_PLAYLIST= Menu.FIRST;
     private final int MENU_CONTEXT_EDIT_PLAYLIST= Menu.FIRST+1;
     private final int MENU_CONTEXT_DELETE_FROM_APP= Menu.FIRST+2;
+    private static final String TAB_TITULO = "Título";
+    private static final String TAB_DURACION = "Duración";
+    private static final String TAB_REPRODUCCIONES = "Reproducciones";
 
     public SongsFragment() {
     }
@@ -47,7 +50,7 @@ public class SongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_layout, container, false);
-        ArrayList<Song> canciones = new ArrayList<Song>();
+        canciones = new ArrayList<Song>();
         //Ponemos el titulo a la pestaña
         getActivity().setTitle(getArguments().getString(ARG_PLAYLIST));
         //Accedemos a la base de datos
@@ -71,8 +74,9 @@ public class SongsFragment extends Fragment {
         mCursor.close();
         //Definimos el sistema de pestañas
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("TODAS"));
-        tabs.addTab(tabs.newTab().setText("DURACIÓN"));
+        tabs.addTab(tabs.newTab().setText(TAB_TITULO));
+        tabs.addTab(tabs.newTab().setText(TAB_DURACION));
+        tabs.addTab(tabs.newTab().setText(TAB_REPRODUCCIONES));
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
 
 
@@ -84,7 +88,20 @@ public class SongsFragment extends Fragment {
                 new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        Toast.makeText(getContext(),"Ordenación no disponible",Toast.LENGTH_SHORT).show();
+                        switch (tab.getText().toString()){
+                            case TAB_TITULO:
+                                orderByTitle();
+                                break;
+                            case TAB_DURACION:
+                                orderByDuration();
+                                break;
+                            case TAB_REPRODUCCIONES:
+                                orderByReproductions();
+                                break;
+                            default:
+                                Toast.makeText(getContext(),"Ha ocurrido un error",Toast.LENGTH_LONG).show();
+                        }
+                        adaptador.notifyDataSetChanged();
                     }
 
                     @Override
@@ -129,5 +146,35 @@ public class SongsFragment extends Fragment {
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+    private void orderByDuration(){
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return new Integer(object1.getDuration_seconds()).compareTo(new Integer(object2.getDuration_seconds()));
+                }
+            } );
+        }
+    }
+    private void orderByTitle(){
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return object1.getTitle().compareTo(object2.getTitle());
+                }
+            } );
+        }
+    }
+    private void orderByReproductions(){
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return object1.getNum_reproductions().compareTo(object2.getNum_reproductions());
+                }
+            } );
+        }
     }
 }
