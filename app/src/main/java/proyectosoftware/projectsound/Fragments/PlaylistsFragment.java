@@ -2,18 +2,21 @@ package proyectosoftware.projectsound.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.PlaylistAdapter;
-import proyectosoftware.projectsound.Tipos.Playlist;
 import proyectosoftware.projectsound.R;
+import proyectosoftware.projectsound.Tipos.Playlist;
 
 /**
  * Fragmento para el contenido principal
@@ -21,6 +24,7 @@ import proyectosoftware.projectsound.R;
 public class PlaylistsFragment extends Fragment {
 
     private ListView lista;
+
     public PlaylistsFragment() {
     }
 
@@ -32,12 +36,12 @@ public class PlaylistsFragment extends Fragment {
         ArrayList<Playlist> datos_playlist = new ArrayList<Playlist>();
 
         //Ejemplos añadidos a la playlist
-        datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256,"Todas","0 pistas","0 min"));
-        datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256,"Favoritos","0 pistas","0 min"));
-        datos_playlist.add(new Playlist(R.drawable.ic_nueva_playlist_256x256,"Calle 13","0 pistas","0 min"));
+        datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_TODAS, "0 pistas", "0 min"));
+        datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
+        datos_playlist.add(new Playlist(R.drawable.ic_nueva_playlist_256x256, "Calle 13", "0 pistas", "0 min"));
 
         lista = (ListView) view.findViewById(R.id.listview_playlist);
-        lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, datos_playlist){
+        lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, datos_playlist) {
 
 
             /*
@@ -60,7 +64,7 @@ public class PlaylistsFragment extends Fragment {
                         numCanciones_playlist.setText(((Playlist) entrada).getNumCancionesPlaylist());
 
                     TextView duracion_playlist = (TextView) view.findViewById(R.id.textView_lista_duracion);
-                    if (duracion_playlist != null){
+                    if (duracion_playlist != null) {
                         duracion_playlist.setText(((Playlist) entrada).getDuracionPlaylist());
                     }
 
@@ -69,22 +73,19 @@ public class PlaylistsFragment extends Fragment {
 
         });
 
-        //LO SIGUIENTE SUPONGO QUE CUANDO SE LE DE FUNCIONALIDAD SERVIRA ALGO, O NO, QUE ESTA COPIADO TAL CUAL DE UN EJEMPLO
-
-/*
-        lista.setOnItemClickListener(new OnItemClickListener() {
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> pariente, View view, int posicion, long id) {
                 Playlist elegido = (Playlist) pariente.getItemAtPosition(posicion);
+                Bundle args = new Bundle();
+                args.putString(SongsFragment.ARG_PLAYLIST, elegido.getTituloPlaylist());
+                SongsFragment f = new SongsFragment();
+                f.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).commit();
 
-                CharSequence texto = "Seleccionado: " + elegido.get_textoDebajo();
-                Toast toast = Toast.makeText(MainActivity.this, texto, Toast.LENGTH_LONG);
-                toast.show();
             }
-
         });
-*/
-
         return view;
     }
 
