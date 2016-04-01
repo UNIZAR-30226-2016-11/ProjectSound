@@ -45,6 +45,19 @@ public class FileSelectorFragment extends Fragment {
         mCursor.close();
         purgeMusicFromDatabase();
     }
+    private int getDuration(String path){
+        final Cursor mCursor = getContext().getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DURATION}, "_data = '"+path+"'", null,
+                null);
+
+        if (mCursor.moveToFirst()) {
+            return mCursor.getInt(0)/1000;
+        }
+
+        mCursor.close();
+        return -1;
+    }
     private void purgeMusicFromDatabase(){
         Cursor mCursor = mDb.getAllCancion();
         if (mCursor.moveToFirst()) {
@@ -92,10 +105,13 @@ public class FileSelectorFragment extends Fragment {
                     rutas.remove(position.intValue()-deleted);
                     deleted++;
                 }
-                for (String s : selectedItems) {
-                    Toast.makeText(v.getContext(), s, Toast.LENGTH_SHORT).show();
-                    mDb.insertCancion(s,s.substring(s.lastIndexOf('/')+1,s.length()),0,1,0);
-                    //TODO hacer insert completo en la base de datos
+                for (String path : selectedItems) {
+                    String titulo = path.substring(path.lastIndexOf('/')+1,path.length());
+                    int favorito = 0; //Default false = 0
+                    int duration_seconds = getDuration(path);
+                    int num_repro = 0; //Default 0
+                    Log.d("DURATION",""+duration_seconds);
+                    mDb.insertCancion(path,titulo,favorito,duration_seconds,num_repro);
                 }
                 listview.clearChoices();
                 listas.notifyDataSetChanged();
