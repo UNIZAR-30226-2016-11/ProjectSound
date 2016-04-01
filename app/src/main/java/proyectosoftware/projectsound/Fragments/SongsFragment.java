@@ -202,15 +202,15 @@ public class SongsFragment extends Fragment {
     }
 
     /**
-     * Organiza las canciones por su duración
+     * Organiza las canciones por su duración de mayor a menor
      */
     private void orderByDuration() {
         if (canciones.size() > 0) {
             Collections.sort(canciones, new Comparator<Song>() {
                 @Override
                 public int compare(final Song object1, final Song object2) {
-                    return Integer.valueOf(object1.getDuration_seconds())
-                            .compareTo(object2.getDuration_seconds());
+                    return Integer.valueOf(object2.getDuration_seconds())
+                            .compareTo(object1.getDuration_seconds());
                 }
             });
         }
