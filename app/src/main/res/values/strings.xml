@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="delete_from_playlist">"Eliminar del Playlist "</string>
+    <string name="edit_playlist">"Editar Playlist "</string>
+    <string name="delete_song">"Borrar canción</string>
+    <string name="options">"Opciones"</string>
+    <string name="search_hint">Búsqueda</string>
 </resources>
