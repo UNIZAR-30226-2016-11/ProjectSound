@@ -27,7 +27,7 @@ public class AddToPlayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
 
-        //Canciones
+        /*//Canciones
         List<String> canciones = new ArrayList<String>();
         canciones.add("Whispers in my head - Onlap");
         canciones.add("X Gon' Give it to ya - DMX");
@@ -46,7 +46,7 @@ public class AddToPlayListFragment extends Fragment {
         playLists.add("La ramona - Fernando Esteso");
         playLists.add("El perdon - Enrique Iglesias, Nicky Jam");
         ArrayAdapter<String> listas = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1,playLists);
-        lists.setAdapter(listas);
+        lists.setAdapter(listas);*/
         return view;
 
     }
