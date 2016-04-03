@@ -34,19 +34,17 @@ public class AddToPlayListFragment extends Fragment {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
         Context contexto = getContext();
         DbAdapter datos = new DbAdapter(contexto);
+        //SACAR TODAS LAS CANCIONES QUE ESTAN AÑADIDAS
         Cursor c = datos.getAllCancion();
-        //Obtener todas las canciones e introducirlas en un ArrayList
         List<String> todasCanciones = new ArrayList<String>();
-        //ruta, titulo, reporducciones, duracion, favorita
         if(c.moveToFirst()){
             for (int i=0; i<c.getCount();i++){ //Canciones de toda la BBDD
                 todasCanciones.add(c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
                 c.moveToNext();
             }
         }
-        //SACAR CANCIONES DE UN PLAYLIST, todo rulando hasta este punto
+        //SACAR CANCIONES DE UN PLAYLIST
         c = datos.getAllFromPlaylist(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);//En realidad va ARG_PLAYLIST
-        Log.d("jijiji","he llegado");
         List<String> cancionesPlaylist = new ArrayList<String>();
         if(c.moveToFirst()){
             for (int i=0;i<c.getCount();i++){
@@ -54,9 +52,16 @@ public class AddToPlayListFragment extends Fragment {
                 c.moveToNext();
             }
         }
+        c.close();//cerramos el cursor
         TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
-        nombreLista.setText("Favoritos");
+        nombreLista.setText(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);
+        //LLENANDO LOS LISTVIEWS
+        ListView allSongs = (ListView) view.findViewById(R.id.cancionesSistema); //LisView izquierdo
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones);
+        allSongs.setAdapter(adaptador);
+        ListView playlistSongs = (ListView) view.findViewById(R.id.playlist); //LisView derecho
+        adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist);
+        playlistSongs.setAdapter(adaptador);
         return view;
-
     }
 }

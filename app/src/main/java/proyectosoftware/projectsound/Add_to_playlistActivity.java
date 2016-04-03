@@ -31,7 +31,7 @@ public class Add_to_playlistActivity extends Activity{
         TextView nombreLista = (TextView) findViewById(R.id.nombreLista);
         nombreLista.setText("San pepe 2016");
         //Lista
-        ListView lists = (ListView) findViewById(R.id.userPlaylists);
+        ListView lists = (ListView) findViewById(R.id.playlist);
         List<String> playLists = new ArrayList<String>();
         playLists.add("Whispers in my head - Onlap");
         playLists.add("La ramona - Fernando Esteso");
