@@ -82,7 +82,7 @@ public class PlaylistsFragment extends Fragment {
                 SongsFragment f = new SongsFragment();
                 f.setArguments(args);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, f).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
 
             }
         });

@@ -43,7 +43,7 @@
         android:scrollHorizontally="true"
 />
     <!--Favoritos-->
-    <ImageView
+    <ImageButton
         android:id="@+id/item_fav"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -52,6 +52,8 @@
         android:layout_marginTop="8dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:longClickable="true"
         android:src="@drawable/ic_favorite_border_black_24dp"
         />
 

@@ -46,6 +46,19 @@ public class DbAdapter extends SQLiteRelacional {
     public void close() {
         mDbHelper.close();
     }
+
+    public boolean updateFavorite(String path, boolean isFavorite) {
+        ContentValues args = new ContentValues();
+        String value;
+        if(isFavorite){
+            value="1";
+        }else{
+            value="0";
+        }
+        args.put(KEY_FAVORITO, value);
+        return mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{path}) > 0;
+    }
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context) {

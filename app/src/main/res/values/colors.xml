@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFCC00</color>
+    <color name="add_to_playlist_titulos">#FFE57F</color>
     <color name="add_to_playlist_titulo">#00C853</color>
     <color name="add_to_playlist_namePlaylist">#AED581</color>
     <color name="Dark">#000000</color>
