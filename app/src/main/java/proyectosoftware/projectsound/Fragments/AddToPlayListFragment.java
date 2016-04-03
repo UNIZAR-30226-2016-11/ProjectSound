@@ -40,13 +40,13 @@ public class AddToPlayListFragment extends Fragment {
         //ruta, titulo, reporducciones, duracion, favorita
         if(c.moveToFirst()){
             for (int i=0; i<c.getCount();i++){ //Canciones de toda la BBDD
-                Log.d("Olia",c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
-                //todasCanciones.add(c.getString(1));
+                todasCanciones.add(c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
                 c.moveToNext();
             }
         }
         //SACAR CANCIONES DE UN PLAYLIST, todo rulando hasta este punto
-        c = datos.getAllFromPlaylist(getArguments().getString("Calle 13"));//En realidad va ARG_PLAYLIST
+        c = datos.getAllFromPlaylist(getArguments().getString(DbAdapter.DEFAULT_PLAYLIST_TODAS));//En realidad va ARG_PLAYLIST
+        Log.d("yandel","he llegado");
         List<String> cancionesPlaylist = new ArrayList<String>();
         String [] caca = c.getColumnNames();
         for(int i=0;i<caca.length;i++){
