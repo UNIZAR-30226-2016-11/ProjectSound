@@ -80,7 +80,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
-                    android:text="Nombre del cantante "/>
+                    android:text="Titulo "/>
             </LinearLayout>
 
 
@@ -101,7 +101,7 @@
                     android:textSize="18sp"
                     android:textStyle="italic"
                     android:textColor="#000000"
-                    android:text="Nombre de la cancion "/>
+                    android:text="Subtitulo "/>
 
                 <!-- minutos de la cancion -->
                 <TextView
