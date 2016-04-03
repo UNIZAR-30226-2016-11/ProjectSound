@@ -10,9 +10,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,8 @@ public class AddToPlayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
         getActivity().setTitle("Add to playlist");
+        final List<String> porAniadir = new ArrayList<>();
+        final List<String> porBorrar = new ArrayList<>();
         //PONIENDO EL BOTON DE CONFIRMACION
         setHasOptionsMenu(true);
         Context contexto = getContext();
@@ -67,6 +73,23 @@ public class AddToPlayListFragment extends Fragment {
         ListView playlistSongs = (ListView) view.findViewById(R.id.playlist); //LisView derecho
         adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist);
         playlistSongs.setAdapter(adaptador);
+        //CAPTURANDO ACCIONES EN EL LISTVIEW IZQUIERDO
+        allSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String cancion = parent.getItemAtPosition(position).toString();
+                porAniadir.add(parent.getItemAtPosition(position).toString());//cancion por aniadir
+            }
+        });
+        //CAPTURANDO ACCIONES EN EL LISTVIEW DERECHO
+        playlistSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String cancion = parent.getItemAtPosition(position).toString();
+                porBorrar.add(parent.getItemAtPosition(position).toString());//cancion por aniadir
+            }
+        });
+        //CAPTURANDO ACCIONES EN EL LISTVIEW DERECHO
         return view;
     }
 
