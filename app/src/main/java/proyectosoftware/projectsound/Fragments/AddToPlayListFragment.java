@@ -32,6 +32,7 @@ public class AddToPlayListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
+        getActivity().setTitle("Add to playlist");
         Context contexto = getContext();
         DbAdapter datos = new DbAdapter(contexto);
         //SACAR TODAS LAS CANCIONES QUE ESTAN AÑADIDAS
