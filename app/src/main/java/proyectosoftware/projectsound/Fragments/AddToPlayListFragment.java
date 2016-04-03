@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,9 +35,11 @@ public class AddToPlayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
         getActivity().setTitle("Add to playlist");
+        //PONIENDO EL BOTON DE CONFIRMACION
+        setHasOptionsMenu(true);
         Context contexto = getContext();
         DbAdapter datos = new DbAdapter(contexto);
-        //SACAR TODAS LAS CANCIONES QUE ESTAN AÑADIDAS
+        //SACAR TODAS LAS CANCIONES QUE ESTAN ANIADIDAS
         Cursor c = datos.getAllCancion();
         List<String> todasCanciones = new ArrayList<String>();
         if(c.moveToFirst()){
@@ -64,5 +68,10 @@ public class AddToPlayListFragment extends Fragment {
         adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist);
         playlistSongs.setAdapter(adaptador);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
+        getActivity().getMenuInflater().inflate(R.menu.done,menu);
     }
 }
