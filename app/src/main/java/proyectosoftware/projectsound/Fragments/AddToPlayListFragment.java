@@ -45,37 +45,17 @@ public class AddToPlayListFragment extends Fragment {
             }
         }
         //SACAR CANCIONES DE UN PLAYLIST, todo rulando hasta este punto
-        c = datos.getAllFromPlaylist(getArguments().getString(DbAdapter.DEFAULT_PLAYLIST_TODAS));//En realidad va ARG_PLAYLIST
-        Log.d("yandel","he llegado");
+        c = datos.getAllFromPlaylist(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);//En realidad va ARG_PLAYLIST
+        Log.d("jijiji","he llegado");
         List<String> cancionesPlaylist = new ArrayList<String>();
-        String [] caca = c.getColumnNames();
-        for(int i=0;i<caca.length;i++){
-            Log.d("Playlist",caca[i]);
+        if(c.moveToFirst()){
+            for (int i=0;i<c.getCount();i++){
+                cancionesPlaylist.add(c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
+                c.moveToNext();
+            }
         }
-
         TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
         nombreLista.setText("Favoritos");
-
-        /*//Canciones
-        List<String> canciones = new ArrayList<String>();
-        canciones.add("Whispers in my head - Onlap");
-        canciones.add("X Gon' Give it to ya - DMX");
-        canciones.add("La ramona - Fernando Esteso");
-        canciones.add("El perdon - Enrique Iglesias, Nicky Jam");
-        ListView songs = (ListView) view.findViewById(R.id.cancionesSistema); //LisView izquierdo
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, canciones);
-        songs.setAdapter(adaptador);
-        //Nombre de la columna de la lista
-        TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
-        nombreLista.setText("San pepe 2016");
-        //Lista
-        ListView lists = (ListView) view.findViewById(R.id.userPlaylists);
-        List<String> playLists = new ArrayList<String>();
-        playLists.add("Whispers in my head - Onlap");
-        playLists.add("La ramona - Fernando Esteso");
-        playLists.add("El perdon - Enrique Iglesias, Nicky Jam");
-        ArrayAdapter<String> listas = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1,playLists);
-        lists.setAdapter(listas);*/
         return view;
 
     }
