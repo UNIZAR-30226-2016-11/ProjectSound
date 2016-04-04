@@ -40,12 +40,14 @@ public class PlaylistsFragment extends Fragment {
         datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
         datos_playlist.add(new Playlist(R.drawable.ic_nueva_playlist_256x256, "Calle 13", "0 pistas", "0 min"));
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
         lista = (ListView) view.findViewById(R.id.listview_playlist);
         lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, datos_playlist) {
 
 
             /*
-            * COMPRUEBA QUE EXISTE LOS ITEMS CORRECTOS ANTES DE INSERTAR CUALQUIER ELEMENTO Y LOS INCLUYE
+            * COMPRUEBA QUE EXISTEN LOS ITEMS CORRECTOS ANTES DE INSERTAR CUALQUIER ELEMENTO
+            * Una vez realizada la comprobacion inserta la informacion
             */
             @Override
             public void onEntrada(Object entrada, View view) {
