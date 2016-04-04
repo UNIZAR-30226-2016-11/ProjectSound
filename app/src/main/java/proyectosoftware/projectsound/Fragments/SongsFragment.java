@@ -105,6 +105,7 @@ public class SongsFragment extends Fragment {
 
         //Obtenemos el ListView
         ListView listView_songs = (ListView) view.findViewById(R.id.listview_canciones);
+        listView_songs.setItemsCanFocus(true);
         //Habilitamos la creación de los contextmenu
         registerForContextMenu(listView_songs);
         adaptador = new SongAdapter(view.getContext(), canciones);

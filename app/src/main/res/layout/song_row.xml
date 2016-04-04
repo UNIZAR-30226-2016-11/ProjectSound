@@ -37,8 +37,10 @@
         android:layout_marginStart="10dp"
         android:layout_alignTop="@+id/num_repro"
         android:layout_toEndOf="@+id/num_repro"
-        android:maxWidth="270dp"
-        android:ellipsize="end"
+        android:maxWidth="263dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:scrollHorizontally="true"
 />
