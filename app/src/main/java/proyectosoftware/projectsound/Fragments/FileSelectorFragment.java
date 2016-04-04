@@ -25,6 +25,7 @@ public class FileSelectorFragment extends Fragment {
     private ArrayList<String> canciones = new ArrayList<String>();
     private ArrayList<String> rutas = new ArrayList<String>();
     private DbAdapter mDb;
+    private static boolean all_selected = false;
 
     public FileSelectorFragment() {
     }
@@ -88,7 +89,7 @@ public class FileSelectorFragment extends Fragment {
         final ArrayAdapter<String> listas = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_multiple_choice, canciones);
         listview.setAdapter(listas);
 
-        Button aceptar = (Button) view.findViewById(R.id.fileSelector_add);
+        final Button aceptar = (Button) view.findViewById(R.id.fileSelector_add);
         aceptar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 SparseBooleanArray checked = listview.getCheckedItemPositions();
@@ -132,6 +133,22 @@ public class FileSelectorFragment extends Fragment {
                 }
                 Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
                 getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+        final Button selection = (Button) view.findViewById(R.id.fileSelector_select);
+        selection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(int i = 0;i<listview.getCount();i++)
+                    listview.setItemChecked(i,all_selected);
+                if(all_selected) {
+                    selection.setText("Ninguna");
+                }else {
+                    selection.setText("Todas");
+                }
+                all_selected= !all_selected;
+
+
             }
         });
         return view;
