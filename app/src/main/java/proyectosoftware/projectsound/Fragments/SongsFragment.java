@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -64,6 +65,11 @@ public class SongsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Generamos la vista
         View view = inflater.inflate(R.layout.song_layout, container, false);
+        //Machaca la posición en el navigationDrawer por si hemos pulsado atrás desde otra pantalla
+        //y tenía otro valor
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_playlists);
+        navigationView=null; //liberamos memoria
         //Obtemos la playlist
         String PLAYLIST;
         if (getArguments().getString(ARG_PLAYLIST) == null) {
