@@ -21,25 +21,38 @@ public class SQLiteRelacional {
     public static final String KEY_NOM_PLAYLIST_PERTENCE = "PLAYLIST_nombre";
     public static final String DEFAULT_PLAYLIST_TODAS = "Todas";
     public static final String DEFAULT_PLAYLIST_FAVORITOS = "Favoritos";
+    public static String PLAYLIST_ESPECIFICA = "";
     public static final int DATABASE_VERSION = 2;
 
     /**
      * Database creation sql statement
      */
     protected static final String DATABASE_CREATE_CANCION =
-            "create table "+DATABASE_TABLE_CANCION+" ("+KEY_RUTA+" text primary key, "
-                    + KEY_TITULO+" text not null,"+KEY_REPRODUCCIONES+" integer not null, "+KEY_DURACION+" integer not null,"
-                    + KEY_FAVORITO+" integer not null);";
+            "create table " + DATABASE_TABLE_CANCION + " (" + KEY_RUTA + " text primary key, "
+                    + KEY_TITULO + " text not null," + KEY_REPRODUCCIONES + " integer not null, " + KEY_DURACION + " integer not null,"
+                    + KEY_FAVORITO + " integer not null);";
     protected static final String DATABASE_CREATE_PLAYLIST =
-            "create table "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" text primary key,"
-                    + KEY_DURACION_PLAYLIST+" integer not null,"+KEY_NUM_CANCIONES+" integer not null);";
+            "create table " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " text primary key,"
+                    + KEY_DURACION_PLAYLIST + " integer not null," + KEY_NUM_CANCIONES + " integer not null);";
     protected static final String DATABASE_CREATE_PERTENECE =
-            "create table "+DATABASE_TABLE_PERTENECE+" ("+KEY_CANCION_PERTENECE+" TEXT PRIMARY KEY,"
-                    + KEY_NOM_PLAYLIST_PERTENCE+" TEXT, "
-                    + "FOREIGN KEY ("+KEY_CANCION_PERTENECE+") REFERENCES "+DATABASE_TABLE_CANCION+"("+KEY_RUTA+"),"
-                    + "FOREIGN KEY ("+KEY_NOM_PLAYLIST_PERTENCE+") REFERENCES "+DATABASE_TABLE_PLAYLIST+"("+KEY_NOMBRE_PLAYLIST+"));";
+            "create table " + DATABASE_TABLE_PERTENECE + " (" + KEY_CANCION_PERTENECE + " TEXT PRIMARY KEY,"
+                    + KEY_NOM_PLAYLIST_PERTENCE + " TEXT, "
+                    + "FOREIGN KEY (" + KEY_CANCION_PERTENECE + ") REFERENCES " + DATABASE_TABLE_CANCION + "(" + KEY_RUTA + "),"
+                    + "FOREIGN KEY (" + KEY_NOM_PLAYLIST_PERTENCE + ") REFERENCES " + DATABASE_TABLE_PLAYLIST + "(" + KEY_NOMBRE_PLAYLIST + "));";
     protected static final String INSERT_PLAYLIST_TODAS =
-            "insert into "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" , "+KEY_DURACION_PLAYLIST+" , "+KEY_NUM_CANCIONES+") values ( '"+DEFAULT_PLAYLIST_TODAS+"' , 0 , 0 );";
-    protected static final String INSERT_PLAYLIST_FAVORITOS=
-            "insert into "+DATABASE_TABLE_PLAYLIST+" ("+KEY_NOMBRE_PLAYLIST+" , "+KEY_DURACION_PLAYLIST+" , "+KEY_NUM_CANCIONES+") values ( '"+DEFAULT_PLAYLIST_FAVORITOS+"' , 0 , 0 );";
+            "insert into " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " , " + KEY_DURACION_PLAYLIST + " , " + KEY_NUM_CANCIONES + ") values ( '" + DEFAULT_PLAYLIST_TODAS + "' , 0 , 0 );";
+    protected static final String INSERT_PLAYLIST_FAVORITOS =
+            "insert into " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " , " + KEY_DURACION_PLAYLIST + " , " + KEY_NUM_CANCIONES + ") values ( '" + DEFAULT_PLAYLIST_FAVORITOS + "' , 0 , 0 );";
+
+    protected  static final String TRIGGER_DELETE_CANCION =
+            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_CANCION"+"FOR EACH ROW"+
+                    "DELETE FROM PERTENECE WHERE KEY_CANCION_PERTENECE=OLD.KEY_RUTA;"+ "END;";
+    protected  static final String TRIGGER_DELETE_PLAYLIST =
+            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_PLAYLIST"+"FOR EACH ROW"+
+                    "DELETE FROM PERTENECE WHERE KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_RUTA;"+ "END;";
+
+    protected  static final String TRIGGER_DELETE_CANCION_PLAYLIST =
+            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_PLAYLIST"+"FOR EACH ROW"+
+                    "DELETE FROM PERTENECE WHERE KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_NOM_PLAYLIST_PERTENCE && KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_NOM_PLAYLIST_PERTENCE;"+ "END;";
 }
+

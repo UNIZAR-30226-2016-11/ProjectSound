@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import proyectosoftware.projectsound.SQLiteRelacional;
+import proyectosoftware.projectsound.Tipos.Playlist;
 
 /**
  * Created by Guillermo on 9/03/16.
@@ -73,11 +75,17 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(DATABASE_CREATE_PERTENECE);
             db.execSQL(INSERT_PLAYLIST_TODAS);
             db.execSQL(INSERT_PLAYLIST_FAVORITOS);
+            db.execSQL(TRIGGER_DELETE_CANCION);
+            db.execSQL(TRIGGER_DELETE_PLAYLIST);
+            db.execSQL(TRIGGER_DELETE_CANCION_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_CANCION);
             Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_PERTENECE);
             Log.d("SQLite", INSERT_PLAYLIST_TODAS);
             Log.d("SQLite", INSERT_PLAYLIST_FAVORITOS);
+            Log.d("SQLite",TRIGGER_DELETE_CANCION);
+            Log.d("SQLite", TRIGGER_DELETE_PLAYLIST);
+            Log.d("SQLite", TRIGGER_DELETE_CANCION_PLAYLIST);
             Log.d("SQLite", "DATABASES CREATED");
         }
 
@@ -104,9 +112,33 @@ public class DbAdapter extends SQLiteRelacional {
                 return -1;
             }
         }
-        public Cursor getAllCancion() {
-            return mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, null, null,null , null,KEY_TITULO);
+    public long insertPlaylist(String nombre, int duracion,int numero){
+        if(nombre.length()>0 && duracion>=0 && numero>=0){
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(KEY_NOMBRE_PLAYLIST,nombre);
+            initialValues.put(KEY_DURACION_PLAYLIST, duracion);
+            initialValues.put(KEY_NUM_CANCIONES,numero);
+            return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
+        }else{
+            Log.d(TAG,"Insercción erronea ("+nombre+","+duracion+","+ numero);
+            return -1;
         }
+    }
+    public long insertPertenece(String ruta, String nombre){
+        if(ruta.length()>0 && nombre.length()>0){
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(KEY_CANCION_PERTENECE,ruta);
+            initialValues.put(KEY_NOM_PLAYLIST_PERTENCE, nombre);
+            return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
+        }else{
+            Log.d(TAG,"Insercción erronea ("+ruta+","+nombre);
+            return -1;
+        }
+    }
+
+    public Cursor getAllCancion() {
+            return mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, null, null,null , null,KEY_TITULO);
+    }
     public Cursor getAllFromPlaylist(String playlist){
         switch (playlist){
             case DEFAULT_PLAYLIST_TODAS:
@@ -117,5 +149,31 @@ public class DbAdapter extends SQLiteRelacional {
                 return null;
         }
     }
+    public long NUM_CANCIONES(String playlist){
+        SQLiteStatement s = mDb.compileStatement("select count(*) from PERETENECE where KEY_NOM_PLAYLIST_PERTENCE ='"+playlist+"' ;");
+        long num = s.simpleQueryForLong();
+        return num;
+    }
+
+  /* public int duracion(String plylist){
+  //en proceso de realizar esta consulta
+
+
+    }*/
+
+    //Metodo para actualizar un playlist
+   public void actulizar_playlist(String playlist, long dur, int num){
+       Log.i("SQLite", "UPDATE: KEY_NOMBRE_PLAYLIST=" + playlist+"-"+dur+","+num);
+        ContentValues values = new ContentValues();
+        values.put(KEY_NOMBRE_PLAYLIST,playlist);
+        values.put(KEY_DURACION_PLAYLIST,dur);
+        values.put(KEY_NUM_CANCIONES,num);
+        mDb.update(playlist,values,KEY_NOMBRE_PLAYLIST+"="+ playlist,null);
+    }
+
+
+
+
+
 
 }
