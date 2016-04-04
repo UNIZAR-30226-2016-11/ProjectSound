@@ -65,11 +65,6 @@ public class SongsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Generamos la vista
         View view = inflater.inflate(R.layout.song_layout, container, false);
-        //Machaca la posición en el navigationDrawer por si hemos pulsado atrás desde otra pantalla
-        //y tenía otro valor
-        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(R.id.nav_playlists);
-        navigationView=null; //liberamos memoria
         //Obtemos la playlist
         String PLAYLIST;
         if (getArguments().getString(ARG_PLAYLIST) == null) {
@@ -78,6 +73,15 @@ public class SongsFragment extends Fragment {
         } else {
             PLAYLIST = getArguments().getString(ARG_PLAYLIST);
         }
+        //Machaca la posición en el navigationDrawer por si hemos pulsado atrás desde otra pantalla
+        //y tenía otro valor
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        if(PLAYLIST.equals(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS)){
+            navigationView.setCheckedItem(R.id.nav_favoritos);
+        }else{
+            navigationView.setCheckedItem(R.id.nav_playlists);
+        }
+        navigationView=null; //liberamos memoria
         //Habilitamos la opción de búsqueda
         setHasOptionsMenu(true);
         canciones = new ArrayList<>();
