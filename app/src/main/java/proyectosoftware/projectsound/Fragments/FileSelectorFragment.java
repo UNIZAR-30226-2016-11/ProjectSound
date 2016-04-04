@@ -35,10 +35,11 @@ public class FileSelectorFragment extends Fragment {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, "_data"}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-
+        String cancion;
         if (mCursor.moveToFirst()) {
             do {
-                canciones.add(mCursor.getString(0));
+                cancion=mCursor.getString(0);
+                canciones.add(cancion.substring(0,cancion.lastIndexOf('.')));
                 rutas.add(mCursor.getString(1));
             } while (mCursor.moveToNext());
         }
@@ -111,6 +112,7 @@ public class FileSelectorFragment extends Fragment {
                 }
                 for (String path : selectedItems) {
                     String titulo = path.substring(path.lastIndexOf('/') + 1, path.length());
+                    titulo = titulo.substring(0,titulo.lastIndexOf('.'));
                     int favorito = 0; //Default false = 0
                     int duration_seconds = getDuration(path);
                     int num_repro = 0; //Default 0
