@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         //Hacemos pantalla de inicio el reproductor
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, new PlayerFragment()).commit();
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
