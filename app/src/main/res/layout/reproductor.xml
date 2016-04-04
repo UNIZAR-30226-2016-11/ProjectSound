@@ -1,148 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="@+id/reproductor">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <include layout="@layout/content_main"/>
-
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:textAlignment="center"
-        android:paddingTop="2dp"
-        android:background="#CCCCCC"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:text="Playlist:EDM "/>
+        android:layout_height="25dp"
+        android:id="@+id/textView_playlist_todas">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="2dp"
+            android:textAlignment="center"
+            android:paddingTop="4dp"
+            android:background="#CCCCCC"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:text="Playlist:Todas "/>
+    </RelativeLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="325dp"
-        android:background="#FFFFFF"
-        android:src="@drawable/ic_view_list_black_24dp"
-        />
-
-
-    <ImageView
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="40dp"
-        android:layout_width="300dp"
-        android:src="@drawable/caratula"
-        android:layout_height="300dp" />
-
-    <TextView
-        android:layout_marginTop="430dp"
+    <RelativeLayout
+        android:id="@+id/ir_A_Playlist"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="14dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="4dp"
-        android:background="#FFCC00"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:text="2BeManiacs "/>
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_below="@+id/textView_playlist_todas">
+        <ImageButton
+            android:layout_width="@android:dimen/app_icon_size"
+            android:layout_height="@android:dimen/app_icon_size"
+            android:clickable="true"
+            android:layout_alignParentEnd="true"
+            android:background="#FFFFFF"
+            android:src="@drawable/ic_view_list_black_24dp"
+            />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_marginTop="455dp"
+
+    <RelativeLayout
+        android:layout_below="@+id/ir_A_Playlist"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:paddingLeft="14dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="4dp"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        android:textColor="#000000"
-        android:text="La solero "/>
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/caratula"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            />
+    </RelativeLayout>
 
-    <ImageButton
-        android:layout_marginTop="434dp"
-        android:layout_marginLeft="310dp"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:background="#FFCC00"
-        android:src="@drawable/ic_favorite_black_24dp"
-        />
-
-    <!-- minutos de la cancion -->
-    <TextView
-        android:layout_marginTop="455dp"
-        android:layout_marginLeft="270dp"
+    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:paddingLeft="0dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="4dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:text="3:15 "/>
+        android:layout_height="wrap_content">
+
+        <!-- NOMBRE CANTANTE, CANCION, MINUTOS Y FAV -->
+        <RelativeLayout
+            android:id="@+id/nombre_cantante_cancion"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#FFCC44"
+            android:layout_above="@+id/barra_estado"
+            >
+
+            <!-- NOMBRE CANTANTE -->
+            <LinearLayout
+                android:id="@+id/nombre_cantante"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:text="Titulo "/>
+            </LinearLayout>
 
 
-    <TextView
-        android:layout_marginTop="495dp"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:paddingLeft="14dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="4dp"
-        android:background="#FFFF44"
-        />
+            <!-- NOMBRE CANCION, MINUTOS Y FAVORITO -->
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nombre_cantante">
 
-    <ImageButton
-        android:layout_marginTop="434dp"
-        android:layout_marginLeft="310dp"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:background="#FFCC00"
-        android:src="@drawable/ic_favorite_black_24dp"
-        />
+                <!-- nombre de la cancion -->
+                <TextView
+                    android:id="@+id/nombre_cancion"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="4dp"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:textColor="#000000"
+                    android:text="Subtitulo "/>
 
-    <TextView
-        android:layout_marginTop="490dp"
-        android:layout_width="300dp"
-        android:layout_height="5dp"
-        android:paddingLeft="14dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="4dp"
-        android:background="#FFAA00"
-        />
+                <!-- minutos de la cancion -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingTop="4dp"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:textColor="#000000"
+                    android:layout_toLeftOf="@+id/favoritoCancion"
+                    android:text="min:seg"/>
 
-    <ImageButton
-        android:layout_marginTop="495dp"
-        android:layout_marginLeft="60dp"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:background="#FFFF44"
-        android:src="@drawable/ic_fast_rewind_black_24dp"
-        />
+                <!-- botón de favorito -->
+                <ImageButton
+                    android:id="@+id/favoritoCancion"
+                    android:layout_width="@android:dimen/app_icon_size"
+                    android:layout_height="@android:dimen/app_icon_size"
+                    android:clickable="true"
+                    android:background="#FFCC44"
+                    android:layout_alignEnd="@+id/nombre_cancion"
+                    android:src="@drawable/ic_favorite_black_24dp"/>
 
-    <ImageButton
-        android:layout_marginTop="495dp"
-        android:layout_marginLeft="150dp"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:background="#FFFF44"
-        android:src="@drawable/ic_play_arrow_black_24dp"
-        />
+           </RelativeLayout>
 
-    <ImageButton
-        android:layout_marginTop="495dp"
-        android:layout_marginLeft="240dp"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_fast_forward_black_24dp"
-        />
+        </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+        <!-- BARRA DE ESTADO -->
+        <RelativeLayout
+            android:id="@+id/barra_estado"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/botones_reproduccion">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="#FFAA00" />
+        </RelativeLayout>
+
+        <!-- BOTONES REPRODUCCION -->
+        <RelativeLayout
+            android:id="@+id/botones_reproduccion"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFF44"
+            android:layout_alignParentBottom="true">
+
+            <!-- botón atrás -->
+            <ImageButton
+                android:layout_toLeftOf="@+id/play_button1"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:clickable="true"
+                android:background="#FFFF44"
+                android:src="@drawable/ic_fast_rewind_black_24dp"
+                />
+
+            <!-- Botón inservible -->
+            <ImageButton
+                android:id="@+id/play_button1"
+                android:layout_toLeftOf="@+id/play_button"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:clickable="false"
+                android:background="#FFFF44"
+                />
+            <!-- play -->
+            <ImageButton
+                android:id="@+id/play_button"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:clickable="true"
+                android:background="#FFFF44"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                />
+
+            <!-- Botón inservible -->
+            <ImageButton
+                android:id="@+id/play_button2"
+                android:layout_toRightOf="@+id/play_button"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:clickable="false"
+                android:background="#FFFF44"
+                />
+            <!-- botón adelante -->
+            <ImageButton
+                android:layout_toRightOf="@+id/play_button2"
+                android:background="#FFFF44"
+                android:clickable="true"
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:src="@drawable/ic_fast_forward_black_24dp"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>
