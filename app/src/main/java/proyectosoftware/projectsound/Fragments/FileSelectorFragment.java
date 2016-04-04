@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.R;
-import proyectosoftware.projectsound.SQLiteRelacional;
 
 
 public class FileSelectorFragment extends Fragment {
@@ -26,13 +25,14 @@ public class FileSelectorFragment extends Fragment {
     private ArrayList<String> canciones = new ArrayList<String>();
     private ArrayList<String> rutas = new ArrayList<String>();
     private DbAdapter mDb;
+
     public FileSelectorFragment() {
     }
 
     private void getMusic() {
         final Cursor mCursor = getContext().getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Audio.Media.DISPLAY_NAME,"_data"}, null, null,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME, "_data"}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 
         if (mCursor.moveToFirst()) {
@@ -45,25 +45,27 @@ public class FileSelectorFragment extends Fragment {
         mCursor.close();
         purgeMusicFromDatabase();
     }
-    private int getDuration(String path){
+
+    private int getDuration(String path) {
         final Cursor mCursor = getContext().getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Audio.Media.DURATION}, "_data = '"+path+"'", null,
+                new String[]{MediaStore.Audio.Media.DURATION}, "_data = '" + path + "'", null,
                 null);
 
         if (mCursor.moveToFirst()) {
-            return mCursor.getInt(0)/1000;
+            return mCursor.getInt(0) / 1000;
         }
 
         mCursor.close();
         return -1;
     }
-    private void purgeMusicFromDatabase(){
+
+    private void purgeMusicFromDatabase() {
         Cursor mCursor = mDb.getAllCancion();
         if (mCursor.moveToFirst()) {
             do {
                 String item = mCursor.getString(mCursor.getColumnIndex(mDb.KEY_RUTA));
-                if(rutas.contains(item)){
+                if (rutas.contains(item)) {
                     int position = rutas.indexOf(item);
                     rutas.remove(position);
                     canciones.remove(position);
@@ -72,6 +74,7 @@ public class FileSelectorFragment extends Fragment {
         }
         mCursor.close();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,21 +103,35 @@ public class FileSelectorFragment extends Fragment {
                     }
                 }
                 int deleted = 0;
-                for (Integer position : positions){
-                    canciones.remove(position.intValue()-deleted);
-                    rutas.remove(position.intValue()-deleted);
+                for (Integer position : positions) {
+                    canciones.remove(position.intValue() - deleted);
+                    rutas.remove(position.intValue() - deleted);
                     deleted++;
                 }
                 for (String path : selectedItems) {
-                    String titulo = path.substring(path.lastIndexOf('/')+1,path.length());
+                    String titulo = path.substring(path.lastIndexOf('/') + 1, path.length());
                     int favorito = 0; //Default false = 0
                     int duration_seconds = getDuration(path);
                     int num_repro = 0; //Default 0
-                    Log.d("DURATION",""+duration_seconds);
-                    mDb.insertCancion(path,titulo,favorito,duration_seconds,num_repro);
+                    mDb.insertCancion(path, titulo, favorito, duration_seconds, num_repro);
                 }
                 listview.clearChoices();
                 listas.notifyDataSetChanged();
+                //Simulamos que se ha pulsado la tecla atrás
+                String msg;
+                int elementos = selectedItems.size();
+                if (elementos == 0) {
+                    msg = "No se ha seleccionado ninguna canción";
+                } else if (elementos == 1) {
+                    msg = "Canción añadida correctamente";
+                } else if (elementos > 1) {
+                    msg = "Canciones añadidas correctamente";
+                } else {
+                    msg = "Ha ocurrido un error";
+                    Log.w("FileSelectorFragment", "Número de insercciones negativo");
+                }
+                Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
         return view;
