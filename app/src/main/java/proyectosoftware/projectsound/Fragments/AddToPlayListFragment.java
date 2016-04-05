@@ -47,7 +47,7 @@ public class AddToPlayListFragment extends Fragment {
         DbAdapter datos = new DbAdapter(contexto);
         //SACAR TODAS LAS CANCIONES QUE ESTAN ANIADIDAS
         Cursor c = datos.getAllCancion();
-        List<String> todasCanciones = new ArrayList<String>();
+        final List<String> todasCanciones = new ArrayList<String>();
         if(c.moveToFirst()){
             for (int i=0; i<c.getCount();i++){ //Canciones de toda la BBDD
                 todasCanciones.add(c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
@@ -56,7 +56,7 @@ public class AddToPlayListFragment extends Fragment {
         }
         //SACAR CANCIONES DE UN PLAYLIST
         c = datos.getAllFromPlaylist(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);//En realidad va ARG_PLAYLIST
-        List<String> cancionesPlaylist = new ArrayList<String>();
+        final List<String> cancionesPlaylist = new ArrayList<String>();
         if(c.moveToFirst()){
             for (int i=0;i<c.getCount();i++){
                 cancionesPlaylist.add(c.getString(c.getColumnIndex(DbAdapter.KEY_TITULO)));
@@ -68,17 +68,21 @@ public class AddToPlayListFragment extends Fragment {
         nombreLista.setText(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);
         //LLENANDO LOS LISTVIEWS
         ListView allSongs = (ListView) view.findViewById(R.id.cancionesSistema); //LisView izquierdo
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones);
+        final ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones);
         allSongs.setAdapter(adaptador);
         ListView playlistSongs = (ListView) view.findViewById(R.id.playlist); //LisView derecho
-        adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist);
-        playlistSongs.setAdapter(adaptador);
+        final ArrayAdapter<String> lista = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist);
+        playlistSongs.setAdapter(lista);
         //CAPTURANDO ACCIONES EN EL LISTVIEW IZQUIERDO
         allSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String cancion = parent.getItemAtPosition(position).toString();
                 porAniadir.add(parent.getItemAtPosition(position).toString());//cancion por aniadir
+                todasCanciones.remove(position);
+                cancionesPlaylist.add(cancion);
+                adaptador.notifyDataSetChanged();
+                lista.notifyDataSetChanged();
             }
         });
         //CAPTURANDO ACCIONES EN EL LISTVIEW DERECHO
@@ -87,6 +91,10 @@ public class AddToPlayListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String cancion = parent.getItemAtPosition(position).toString();
                 porBorrar.add(parent.getItemAtPosition(position).toString());//cancion por aniadir
+                cancionesPlaylist.remove(position);
+                todasCanciones.add(cancion);
+                adaptador.notifyDataSetChanged();
+                lista.notifyDataSetChanged();
             }
         });
         //CAPTURANDO ACCIONES EN EL LISTVIEW DERECHO
