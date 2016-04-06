@@ -49,7 +49,7 @@ public class DbAdapter extends SQLiteRelacional {
         mDbHelper.close();
     }
 
-    public boolean updateFavorite(String path, boolean isFavorite) {
+   public boolean updateFavorite(String path, boolean isFavorite) {
         ContentValues args = new ContentValues();
         String value;
         if(isFavorite){
@@ -75,17 +75,19 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(DATABASE_CREATE_PERTENECE);
             db.execSQL(INSERT_PLAYLIST_TODAS);
             db.execSQL(INSERT_PLAYLIST_FAVORITOS);
-            db.execSQL(TRIGGER_DELETE_CANCION);
+
+            /*db.execSQL(TRIGGER_DELETE_CANCION);
             db.execSQL(TRIGGER_DELETE_PLAYLIST);
-            db.execSQL(TRIGGER_DELETE_CANCION_PLAYLIST);
+            db.execSQL(TRIGGER_DELETE_CANCION_PLAYLIST);*/
             Log.d("SQLite", DATABASE_CREATE_CANCION);
             Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_PERTENECE);
             Log.d("SQLite", INSERT_PLAYLIST_TODAS);
             Log.d("SQLite", INSERT_PLAYLIST_FAVORITOS);
-            Log.d("SQLite",TRIGGER_DELETE_CANCION);
+           /* Log.d("SQLite",TRIGGER_DELETE_CANCION);
             Log.d("SQLite", TRIGGER_DELETE_PLAYLIST);
-            Log.d("SQLite", TRIGGER_DELETE_CANCION_PLAYLIST);
+            Log.d("SQLite", TRIGGER_DELETE_CANCION_PLAYLIST);*/
+
             Log.d("SQLite", "DATABASES CREATED");
         }
 
@@ -149,17 +151,78 @@ public class DbAdapter extends SQLiteRelacional {
                 return null;
         }
     }
-    public long NUM_CANCIONES(String playlist){
-        SQLiteStatement s = mDb.compileStatement("select count(*) from PERETENECE where KEY_NOM_PLAYLIST_PERTENCE ='"+playlist+"' ;");
-        long num = s.simpleQueryForLong();
-        return num;
+
+
+
+    //devuelve todas las playlist
+    public Cursor fetchAllPlaylist(){
+        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
 
-  /* public int duracion(String plylist){
-  //en proceso de realizar esta consulta
-
-
+    //devuelve todas las canciones que hay en una playlist
+    public  Cursor canciones_en_playlis(String playlist){
+        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{KEY_CANCION_PERTENECE},KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null,null,null,KEY_CANCION_PERTENECE);
+    }
+    //devuelve numero de canciones en una playlist
+    /*public int  getNumero(String playlist){
+        return mDb.
     }*/
+
+    //devuelve numero de playlist a las que pertenece una cancion
+
+
+    //devuelve la duracion de una playlist
+
+    //devuelve el nombre de una cancion dada su ruta
+    public  Cursor nombre_cancion(String ruta){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_TITULO},KEY_RUTA+"="+ruta,null,null,null,KEY_TITULO);
+    }
+    //devuelve duracion
+   public  Cursor DURACION_CANCION(String ruta){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_DURACION},KEY_RUTA+"="+ruta,null,null,null,KEY_DURACION);
+    }
+
+    //devuelve reproduccion
+    public  Cursor num_reproduccion(String ruta){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_REPRODUCCIONES},KEY_RUTA+"="+ruta,null,null,null,KEY_REPRODUCCIONES);
+    }
+
+    //devuelve favorito
+    public  Cursor es_favorito(String ruta){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_FAVORITO},KEY_RUTA+"="+ruta,null,null,null,KEY_FAVORITO);
+    }
+
+    public  Cursor ruta (String nombre){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_RUTA},KEY_TITULO+"="+nombre,null,null,null,KEY_RUTA);
+    }
+    //devuelve duracion
+    public  Cursor DURACION_CANCION_nom(String  nombre){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_DURACION},KEY_TITULO+"="+nombre,null,null,null,KEY_DURACION);
+    }
+
+    //devuelve reproduccion
+    public  Cursor num_reproduccion_nom(String nombre){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_REPRODUCCIONES},KEY_TITULO+"="+nombre,null,null,null,KEY_REPRODUCCIONES);
+    }
+
+    //devuelve favorito
+    public  Cursor es_favorito_nom(String nombre){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_FAVORITO},KEY_TITULO+"="+nombre,null,null,null,KEY_FAVORITO);
+    }
+
+    //devuelve lista con nombre de favoritos
+    public  Cursor lista_nombre_favoritos(){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_TITULO},KEY_FAVORITO+"="+1,null,null,null,null,KEY_TITULO);
+    }
+
+    //devuelve lista con rutas de favoritos
+    public  Cursor lista_ryta_favoritos(){
+        return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_RUTA},KEY_FAVORITO+"="+1,null,null,null,KEY_RUTA);
+    }
+
+
+
+
 
     //Metodo para actualizar un playlist
    public void actulizar_playlist(String playlist, long dur, int num){
@@ -171,9 +234,17 @@ public class DbAdapter extends SQLiteRelacional {
         mDb.update(playlist,values,KEY_NOMBRE_PLAYLIST+"="+ playlist,null);
     }
 
+    public  Cursor getNumLista(String playlist){
+        //return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT(*)"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
+        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT("+KEY_RUTA+")"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
+    }
 
-
-
-
-
+    public  Cursor getDuracionLista(String playlist){
+        //SELECT SUM(KEY_DURACION)
+        //FROM DATABASE_TABLE_CANCION
+        //JOIN DATABASE_CREATE_PERTENECE
+        //ON DATABASE_TABLE_CANCION.KEY_RUTA=DATABASE_CREATE_PERTENECE.KEY_CANCION_PERTENECE
+        //WHERE DATABASE_CREATE_PERTENECE.KEY_NOM_PLAYLIST_PERTENCE='FAVORITOS'
+        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"SUM("+KEY_DURACION+")"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
+    }
 }
