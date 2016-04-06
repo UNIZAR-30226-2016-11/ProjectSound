@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -45,6 +46,7 @@ public class SongsFragment extends Fragment {
     private final int MENU_CONTEXT_EDIT_PLAYLIST = Menu.FIRST + 1;
     private final int MENU_CONTEXT_DELETE_SONG = Menu.FIRST + 2;
     private DbAdapter mDb;
+    private static String PLAYLIST;
 
     /**
      * Constructor por defencto
@@ -66,7 +68,6 @@ public class SongsFragment extends Fragment {
         //Generamos la vista
         View view = inflater.inflate(R.layout.song_layout, container, false);
         //Obtemos la playlist
-        String PLAYLIST;
         if (getArguments().getString(ARG_PLAYLIST) == null) {
             PLAYLIST = "None";
             Log.w("SONGFRAGMENT", "WARNING: null argument ARG_PLAYLIST");
@@ -199,7 +200,12 @@ public class SongsFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_CONTEXT_EDIT_PLAYLIST:
-                //TODO juntar con la parte de dani
+                Fragment f = new AddToPlayListFragment();
+                Bundle args = new Bundle();
+                args.putString(AddToPlayListFragment.ARG_PLAYLIST,PLAYLIST);
+                f.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
                 return true;
             case MENU_CONTEXT_DELETE_FROM_PLAYLIST:
                 //TODO hacer llamada a la BD
