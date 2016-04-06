@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
@@ -114,26 +115,26 @@ public class DbAdapter extends SQLiteRelacional {
                 return -1;
             }
         }
-    public long insertPlaylist(String nombre, int duracion,int numero){
-        if(nombre.length()>0 && duracion>=0 && numero>=0){
+    public long insertPlaylist(String nombre){
+        if(nombre.length()>0){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_NOMBRE_PLAYLIST,nombre);
-            initialValues.put(KEY_DURACION_PLAYLIST, duracion);
-            initialValues.put(KEY_NUM_CANCIONES,numero);
+            initialValues.put(KEY_DURACION_PLAYLIST, 0);
+            initialValues.put(KEY_NUM_CANCIONES,0);
             return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
         }else{
-            Log.d(TAG,"Insercción erronea ("+nombre+","+duracion+","+ numero);
+            Log.d(TAG,"Insercción erronea ("+nombre+","+0+","+ 0);
             return -1;
         }
     }
-    public long insertPertenece(String ruta, String nombre){
-        if(ruta.length()>0 && nombre.length()>0){
+    public long insertPertenece(String rutaCancion, String playlist){
+        if(rutaCancion.length()>0 && playlist.length()>0){
             ContentValues initialValues = new ContentValues();
-            initialValues.put(KEY_CANCION_PERTENECE,ruta);
-            initialValues.put(KEY_NOM_PLAYLIST_PERTENCE, nombre);
-            return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
+            initialValues.put(KEY_CANCION_PERTENECE,rutaCancion);
+            initialValues.put(KEY_NOM_PLAYLIST_PERTENCE, playlist);
+            return mDb.insert(DATABASE_TABLE_PERTENECE, null, initialValues);
         }else{
-            Log.d(TAG,"Insercción erronea ("+ruta+","+nombre);
+            Log.d(TAG,"Insercción erronea ("+rutaCancion+","+playlist);
             return -1;
         }
     }
@@ -148,28 +149,32 @@ public class DbAdapter extends SQLiteRelacional {
             case DEFAULT_PLAYLIST_FAVORITOS:
                 return  mDb.query(DATABASE_TABLE_CANCION, new String[] {"*"}, KEY_FAVORITO+" = 1", null,null , null,KEY_TITULO);
             default:
-                return null;
+                String[] playlist_array = {playlist};
+
+                //Creamos el constructor de consultas
+                SQLiteQueryBuilder QB = new SQLiteQueryBuilder();
+
+                //Especificamos el JOIN
+                QB.setTables(DATABASE_TABLE_CANCION +
+                      " LEFT OUTER JOIN " + DATABASE_TABLE_PERTENECE + " ON " +
+                      KEY_RUTA + " = " + KEY_CANCION_PERTENECE);
+                //Especificamos el select, en este caso, todos los atributos de la tabla Cancion
+                String[] select = {KEY_TITULO,KEY_RUTA,KEY_REPRODUCCIONES,KEY_FAVORITO,KEY_DURACION};
+                //Consultamos y devolvemos resultado
+                return QB.query(mDb, select, KEY_NOM_PLAYLIST_PERTENCE+"=?", playlist_array, null, null, KEY_TITULO);
         }
     }
 
 
-
     //devuelve todas las playlist
-    public Cursor fetchAllPlaylist(){
+    public Cursor getAllPlaylist(){
         return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
 
-    //devuelve todas las canciones que hay en una playlist
-    public  Cursor canciones_en_playlis(String playlist){
-        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{KEY_CANCION_PERTENECE},KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null,null,null,KEY_CANCION_PERTENECE);
-    }
     //devuelve numero de canciones en una playlist
     /*public int  getNumero(String playlist){
         return mDb.
     }*/
-
-    //devuelve numero de playlist a las que pertenece una cancion
-
 
     //devuelve la duracion de una playlist
 
@@ -225,7 +230,8 @@ public class DbAdapter extends SQLiteRelacional {
 
 
     //Metodo para actualizar un playlist
-   public void actulizar_playlist(String playlist, long dur, int num){
+   public void actualizar_playlist(String playlist, long dur, int num){
+       //TODO no hace falta, esto lo hará un trigger
        Log.i("SQLite", "UPDATE: KEY_NOMBRE_PLAYLIST=" + playlist+"-"+dur+","+num);
         ContentValues values = new ContentValues();
         values.put(KEY_NOMBRE_PLAYLIST,playlist);
@@ -234,17 +240,13 @@ public class DbAdapter extends SQLiteRelacional {
         mDb.update(playlist,values,KEY_NOMBRE_PLAYLIST+"="+ playlist,null);
     }
 
-    public  Cursor getNumLista(String playlist){
-        //return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT(*)"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
-        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT("+KEY_RUTA+")"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
+    public  Cursor getNumSongFromPlaylist(String playlist){
+        String[] playlist_array = {playlist};
+        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT("+KEY_CANCION_PERTENECE+")"},KEY_NOM_PLAYLIST_PERTENCE +"= ?",playlist_array,null,null,KEY_CANCION_PERTENECE);
     }
 
     public  Cursor getDuracionLista(String playlist){
-        //SELECT SUM(KEY_DURACION)
-        //FROM DATABASE_TABLE_CANCION
-        //JOIN DATABASE_CREATE_PERTENECE
-        //ON DATABASE_TABLE_CANCION.KEY_RUTA=DATABASE_CREATE_PERTENECE.KEY_CANCION_PERTENECE
-        //WHERE DATABASE_CREATE_PERTENECE.KEY_NOM_PLAYLIST_PERTENCE='FAVORITOS'
-        return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"SUM("+KEY_DURACION+")"},KEY_NOM_PLAYLIST_PERTENCE +"="+ playlist,null,null,null,KEY_RUTA);
+        String[] playlist_array = {playlist};
+        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_DURACION_PLAYLIST},KEY_NOMBRE_PLAYLIST+" =?",playlist_array,null,null,KEY_NOMBRE_PLAYLIST);
     }
 }
