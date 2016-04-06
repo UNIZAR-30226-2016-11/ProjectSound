@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -117,7 +118,15 @@ public class AddToPlayListFragment extends Fragment {
     /* Metodo al que se llama cuando se pulsa el boton de confirmar*/
     @Override
     public boolean onOptionsItemSelected (MenuItem menu){
-        Log.d("Polvos","de talco");
+        /* Solo falta utilizar los metodos de la BBDD cuando este terminada*/
+        for(int i=0;i<porAniadir.size();i++){
+            //TODO aniadir elemento a la playlist
+        }
+        for(int i=0;i<porBorrar.size();i++){
+            //TODO quitar elemento de la playlist
+        }
+        Toast.makeText(getContext(),"Cambios guardados",Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStack();
         return true;
     }
 }
