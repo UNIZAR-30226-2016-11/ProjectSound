@@ -77,17 +77,13 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(INSERT_PLAYLIST_TODAS);
             db.execSQL(INSERT_PLAYLIST_FAVORITOS);
 
-            /*db.execSQL(TRIGGER_DELETE_CANCION);
-            db.execSQL(TRIGGER_DELETE_PLAYLIST);
-            db.execSQL(TRIGGER_DELETE_CANCION_PLAYLIST);*/
+
             Log.d("SQLite", DATABASE_CREATE_CANCION);
             Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_PERTENECE);
             Log.d("SQLite", INSERT_PLAYLIST_TODAS);
             Log.d("SQLite", INSERT_PLAYLIST_FAVORITOS);
-           /* Log.d("SQLite",TRIGGER_DELETE_CANCION);
-            Log.d("SQLite", TRIGGER_DELETE_PLAYLIST);
-            Log.d("SQLite", TRIGGER_DELETE_CANCION_PLAYLIST);*/
+
 
             Log.d("SQLite", "DATABASES CREATED");
         }
@@ -248,5 +244,28 @@ public class DbAdapter extends SQLiteRelacional {
     public  Cursor getDuracionLista(String playlist){
         String[] playlist_array = {playlist};
         return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_DURACION_PLAYLIST},KEY_NOMBRE_PLAYLIST+" =?",playlist_array,null,null,KEY_NOMBRE_PLAYLIST);
+    }
+
+    public boolean deleteCancion(String cancion){
+
+       boolean borrar;
+        boolean borrado;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion,null)>0;
+
+        borrado = mDb.delete(DATABASE_TABLE_CANCION,KEY_RUTA+"="+cancion,null)>0;
+         return borrar&&borrado;
+    }
+
+    public boolean deletePlaylist(String playlist){
+        boolean borrar;
+        boolean borrado;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_NOM_PLAYLIST_PERTENCE+"="+KEY_NOM_PLAYLIST_PERTENCE,null)>0;
+        borrado = mDb.delete(DATABASE_TABLE_PLAYLIST,KEY_NOMBRE_PLAYLIST+"="+playlist,null)>0;
+        return borrar&&borrado;
+    }
+
+
+    public boolean deleteFromPlaylist(String cancion, String playlist){
+        return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion+"AND"+KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null)>0;
     }
 }
