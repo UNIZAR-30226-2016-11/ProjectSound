@@ -111,19 +111,19 @@ public class DbAdapter extends SQLiteRelacional {
                 return -1;
             }
         }
-    public long insertPlaylist(String nombre){
-        if(nombre.length()>0){
+    public long insertNewPlaylist(String nombrePlaylist){
+        if(nombrePlaylist.length()>0){
             ContentValues initialValues = new ContentValues();
-            initialValues.put(KEY_NOMBRE_PLAYLIST,nombre);
+            initialValues.put(KEY_NOMBRE_PLAYLIST,nombrePlaylist);
             initialValues.put(KEY_DURACION_PLAYLIST, 0);
             initialValues.put(KEY_NUM_CANCIONES,0);
             return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
         }else{
-            Log.d(TAG,"Insercción erronea ("+nombre+","+0+","+ 0);
+            Log.d(TAG,"Insercción erronea ("+nombrePlaylist+","+0+","+ 0);
             return -1;
         }
     }
-    public long insertPertenece(String rutaCancion, String playlist){
+    public long insertToPlaylist(String rutaCancion, String playlist){
         if(rutaCancion.length()>0 && playlist.length()>0){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_CANCION_PERTENECE,rutaCancion);
@@ -166,11 +166,12 @@ public class DbAdapter extends SQLiteRelacional {
     public Cursor getAllPlaylist(){
         return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
-
+//TODO NO SE DEBERIA USAR ESTO
+    /*
     //devuelve numero de canciones en una playlist
     /*public int  getNumero(String playlist){
         return mDb.
-    }*/
+    }
 
     //devuelve la duracion de una playlist
 
@@ -220,7 +221,7 @@ public class DbAdapter extends SQLiteRelacional {
     public  Cursor lista_ryta_favoritos(){
         return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_RUTA},KEY_FAVORITO+"="+1,null,null,null,KEY_RUTA);
     }
-
+    */
 
 
 
