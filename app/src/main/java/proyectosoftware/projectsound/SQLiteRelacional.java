@@ -35,7 +35,7 @@ public class SQLiteRelacional {
             "create table " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " text primary key,"
                     + KEY_DURACION_PLAYLIST + " integer not null," + KEY_NUM_CANCIONES + " integer not null);";
     protected static final String DATABASE_CREATE_PERTENECE =
-            "create table " + DATABASE_TABLE_PERTENECE + " (" + KEY_CANCION_PERTENECE + " TEXT PRIMARY KEY,"
+            "create table " + DATABASE_TABLE_PERTENECE + " (" + KEY_CANCION_PERTENECE + " TEXT,"
                     + KEY_NOM_PLAYLIST_PERTENCE + " TEXT, "
                     + "FOREIGN KEY (" + KEY_CANCION_PERTENECE + ") REFERENCES " + DATABASE_TABLE_CANCION + "(" + KEY_RUTA + "),"
                     + "FOREIGN KEY (" + KEY_NOM_PLAYLIST_PERTENCE + ") REFERENCES " + DATABASE_TABLE_PLAYLIST + "(" + KEY_NOMBRE_PLAYLIST + "));";
