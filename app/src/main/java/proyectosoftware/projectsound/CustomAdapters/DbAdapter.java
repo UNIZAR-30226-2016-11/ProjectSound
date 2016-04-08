@@ -304,8 +304,32 @@ public class DbAdapter extends SQLiteRelacional {
 
     }
 
-    
 
+   /* public int incrementarReproduccionesCancion(String ruta){
+
+
+
+
+        Cursor c = mDb.query(DATABASE_TABLE_CANCION, new String[] {KEY_REPRODUCCIONES}, KEY_RUTA+"= ?"+ruta, null,null , null,null);
+
+
+
+
+
+
+    }*/
+    public void incrementarReproduccionCancion(String ruta){
+        Cursor c = mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_REPRODUCCIONES} ,KEY_RUTA+"= ?",new String[]{ruta},null,null,null,null);
+
+        c.moveToFirst();
+        int reproducciones = c.getInt(c.getColumnIndex(DbAdapter.KEY_REPRODUCCIONES));
+
+        ContentValues args = new ContentValues();
+        reproducciones++;
+        args.put(KEY_REPRODUCCIONES, reproducciones);
+        mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{ruta});
+
+    }
 
 
 }
