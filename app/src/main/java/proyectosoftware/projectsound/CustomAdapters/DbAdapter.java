@@ -46,6 +46,10 @@ public class DbAdapter extends SQLiteRelacional {
         return this;
     }
 
+    public boolean isOpen(){
+        return  mDb.isOpen();
+    }
+
     public void close() {
         mDbHelper.close();
     }
@@ -299,6 +303,8 @@ public class DbAdapter extends SQLiteRelacional {
            return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"=?"+" AND "+KEY_NOM_PLAYLIST_PERTENCE+"=?",new String[]{cancion,playlist})>0;
 
     }
+
+    
 
 
 
