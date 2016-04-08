@@ -39,6 +39,6 @@ public class SongFactory {
     }
     
     public List<Song> getAllFromPlaylist(String playlist){
-        return extractSongs(db.getAllFromPlaylist(playlist)):
+        return extractSongs(db.getAllFromPlaylist(playlist));
     }
 }
