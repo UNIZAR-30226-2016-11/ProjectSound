@@ -17,6 +17,8 @@ public class SongFactory {
         this.db=db;
     }
     private List<Song> extractSongs(Cursor mCursor){
+        if(!db.isOpen())
+            db.open();
         List<Song> lista = new ArrayList<Song>();
         if (mCursor.moveToFirst()) {
             do {
@@ -37,7 +39,7 @@ public class SongFactory {
     public List<Song> getAllSongs(){
         return extractSongs(db.getAllCancion());
     }
-    
+
     public List<Song> getAllFromPlaylist(String playlist){
         return extractSongs(db.getAllFromPlaylist(playlist));
     }
