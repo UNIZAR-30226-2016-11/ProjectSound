@@ -212,9 +212,14 @@ public class SongsFragment extends Fragment {
                 fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
                 return true;
             case MENU_CONTEXT_DELETE_FROM_PLAYLIST:
-                //TODO hacer llamada a la BD
+                if(!mDb.isOpen())
+                    mDb.open();
+                if(selectedSong!=null)
+                    mDb.deleteFromPlaylist(selectedSong,PLAYLIST);
                 return true;
             case MENU_CONTEXT_DELETE_SONG:
+                if(!mDb.isOpen())
+                    mDb.open();
                 if(selectedSong!=null)
                     mDb.deleteCancion(selectedSong);
                 selectedSong=null;
