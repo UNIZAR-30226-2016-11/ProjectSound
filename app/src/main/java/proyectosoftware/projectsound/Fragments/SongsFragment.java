@@ -218,12 +218,12 @@ public class SongsFragment extends Fragment {
                 if(selectedSong!=null)
                     mDb.deleteCancion(selectedSong);
                 selectedSong=null;
+                adaptador.notifyDataSetChanged();
                 return true;
         }
         //Si no es ninguno de los anteriores, llamamos al padre
         return super.onContextItemSelected(item);
     }
-
     /**
      * Organiza las canciones por su duración de mayor a menor
      */
@@ -261,7 +261,7 @@ public class SongsFragment extends Fragment {
             Collections.sort(canciones, new Comparator<Song>() {
                 @Override
                 public int compare(final Song object1, final Song object2) {
-                    return object1.getNum_reproductions().compareTo(object2.getNum_reproductions());
+                    return object2.getNum_reproductions().compareTo(object1.getNum_reproductions());
                 }
             });
         }

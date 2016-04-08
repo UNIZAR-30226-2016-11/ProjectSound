@@ -98,6 +98,10 @@ public class SongAdapter extends ArrayAdapter<Song> {
                 //TODO enviar canción al reproductor
                 Toast.makeText(getContext(), "Reproducción no disponible de " +
                         songArrayList.get(position).getTitle(), Toast.LENGTH_LONG).show();
+                DbAdapter db = new DbAdapter(getContext());
+                if(!db.isOpen())
+                    db.open();
+                db.incrementarReproduccionCancion(songArrayList.get(position).getPath());
             }
         });
         //7. Ponemos el listener en la celda de larga pulsación
