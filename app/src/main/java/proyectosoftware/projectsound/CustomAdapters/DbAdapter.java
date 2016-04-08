@@ -251,22 +251,27 @@ public class DbAdapter extends SQLiteRelacional {
 
        boolean borrar;
         boolean borrado;
-        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion,null)>0;
-
-        borrado = mDb.delete(DATABASE_TABLE_CANCION,KEY_RUTA+"="+cancion,null)>0;
-         return borrar&&borrado;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"=?", new String[] {cancion})>0;
+        borrado = mDb.delete(DATABASE_TABLE_CANCION,KEY_RUTA+"=?", new String[] {cancion})>0;
+        return borrar&&borrado;
     }
 
     public boolean deletePlaylist(String playlist){
         boolean borrar;
         boolean borrado;
-        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_NOM_PLAYLIST_PERTENCE+"="+KEY_NOM_PLAYLIST_PERTENCE,null)>0;
-        borrado = mDb.delete(DATABASE_TABLE_PLAYLIST,KEY_NOMBRE_PLAYLIST+"="+playlist,null)>0;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_NOM_PLAYLIST_PERTENCE+"=?", new String[] {playlist})>0;
+        borrado = mDb.delete(DATABASE_TABLE_PLAYLIST,KEY_NOMBRE_PLAYLIST+"=?", new String[] {playlist})>0;
         return borrar&&borrado;
+
+
     }
 
 
     public boolean deleteFromPlaylist(String cancion, String playlist){
-        return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion+"AND"+KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null)>0;
+       return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion+"AND"+KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null)>0;
+
     }
+
+
+
 }
