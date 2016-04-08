@@ -17,6 +17,8 @@ public class SongFactory {
         this.db=db;
     }
     private List<Song> extractSongs(Cursor mCursor){
+        if(!db.isOpen())
+            db.open();
         List<Song> lista = new ArrayList<Song>();
         if (mCursor.moveToFirst()) {
             do {
