@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class SongsFragment extends Fragment {
     private final int MENU_CONTEXT_DELETE_SONG = Menu.FIRST + 2;
     private DbAdapter mDb;
     private static String PLAYLIST;
+    private static String selectedSong = null;
 
     /**
      * Constructor por defencto
@@ -168,6 +170,8 @@ public class SongsFragment extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        selectedSong=(canciones.get((int)info.id).getPath());
         //Le ponemos el titulo
         menu.setHeaderTitle(getContext().getString(R.string.options));
         //Obtenemos el nombre del playlist en el que se está creando
@@ -211,7 +215,9 @@ public class SongsFragment extends Fragment {
                 //TODO hacer llamada a la BD
                 return true;
             case MENU_CONTEXT_DELETE_SONG:
-                //TODO hacer llamada a la BD
+                if(selectedSong!=null)
+                    mDb.deleteCancion(selectedSong);
+                selectedSong=null;
                 return true;
         }
         //Si no es ninguno de los anteriores, llamamos al padre
