@@ -23,6 +23,7 @@ public class SQLiteRelacional {
     public static final String DEFAULT_PLAYLIST_FAVORITOS = "Favoritos";
     public static String PLAYLIST_ESPECIFICA = "";
     public static final int DATABASE_VERSION = 2;
+    public static final String  KEY_ID="id";
 
     /**
      * Database creation sql statement
@@ -32,10 +33,10 @@ public class SQLiteRelacional {
                     + KEY_TITULO + " text not null," + KEY_REPRODUCCIONES + " integer not null, " + KEY_DURACION + " integer not null,"
                     + KEY_FAVORITO + " integer not null);";
     protected static final String DATABASE_CREATE_PLAYLIST =
-            "create table " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " text primary key,"
+            "create table " + DATABASE_TABLE_PLAYLIST + " ( id integer primary key autoincrement," + KEY_NOMBRE_PLAYLIST + " text primary key,"
                     + KEY_DURACION_PLAYLIST + " integer not null," + KEY_NUM_CANCIONES + " integer not null);";
     protected static final String DATABASE_CREATE_PERTENECE =
-            "create table " + DATABASE_TABLE_PERTENECE + " (" + KEY_CANCION_PERTENECE + " TEXT,"
+            "create table " + DATABASE_TABLE_PERTENECE + " ("+KEY_ID+ "text primary key," + KEY_CANCION_PERTENECE + " TEXT,"
                     + KEY_NOM_PLAYLIST_PERTENCE + " TEXT, "
                     + "FOREIGN KEY (" + KEY_CANCION_PERTENECE + ") REFERENCES " + DATABASE_TABLE_CANCION + "(" + KEY_RUTA + "),"
                     + "FOREIGN KEY (" + KEY_NOM_PLAYLIST_PERTENCE + ") REFERENCES " + DATABASE_TABLE_PLAYLIST + "(" + KEY_NOMBRE_PLAYLIST + "));";

@@ -241,6 +241,35 @@ public class DbAdapter extends SQLiteRelacional {
         mDb.update(playlist,values,KEY_NOMBRE_PLAYLIST+"="+ playlist,null);
     }
 
+
+    public boolean cambiar_nombre_playlist(String nombre_viejo, String nombre_nuevo){
+        if(insertNewPlaylist(nombre_nuevo)<0){
+            return false;
+        }
+        else{
+            Log.d(nombre_nuevo,"insertado");
+        }
+        Cursor c= getAllFromPlaylist(nombre_viejo);
+        if(c.moveToFirst()){
+
+            do {
+                String ruta = c.getString(c.getColumnIndex(DbAdapter.KEY_RUTA));
+                Log.d(nombre_nuevo, ruta);
+
+                if(insertToPlaylist(ruta, nombre_nuevo)<0){
+
+                    return false;
+                }
+                else{
+                    Log.d("insertado",ruta);
+                }
+            } while(c.moveToNext());
+        }
+        return deletePlaylist(nombre_viejo);
+
+
+    }
+
     public  Cursor getNumSongFromPlaylist(String playlist){
         String[] playlist_array = {playlist};
         return mDb.query(DATABASE_TABLE_PERTENECE, new String[]{"COUNT("+KEY_CANCION_PERTENECE+")"},KEY_NOM_PLAYLIST_PERTENCE +"= ?",playlist_array,null,null,KEY_CANCION_PERTENECE);
@@ -328,6 +357,8 @@ public class DbAdapter extends SQLiteRelacional {
         reproducciones++;
         args.put(KEY_REPRODUCCIONES, reproducciones);
         mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{ruta});
+
+
 
     }
 
