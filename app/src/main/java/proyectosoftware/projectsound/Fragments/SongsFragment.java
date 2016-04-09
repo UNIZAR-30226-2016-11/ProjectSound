@@ -3,6 +3,7 @@ package proyectosoftware.projectsound.Fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -29,6 +31,7 @@ import java.util.Comparator;
 
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.SongAdapter;
+import proyectosoftware.projectsound.Factorys.SongFactory;
 import proyectosoftware.projectsound.R;
 import proyectosoftware.projectsound.Tipos.Song;
 
@@ -92,30 +95,13 @@ public class SongsFragment extends Fragment {
         getActivity().setTitle(PLAYLIST);
         //Accedemos a la base de datos
         mDb = new DbAdapter(view.getContext());
-        mDb.open();
+        if(!mDb.isOpen()) mDb.open();
         //obtenemos las canciones
-        Cursor mCursor = mDb.getAllFromPlaylist(PLAYLIST);
-        if (mCursor.moveToFirst()) {
-            do {
-                //Para cada fila de la base de datos, obtenemos todos los campos
-                String titulo = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_TITULO));
-                String path = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_RUTA));
-                boolean fav = (mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_FAVORITO)) == 1);
-                int duration = mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_DURACION));
-                int reproductions = mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_REPRODUCCIONES));
-                //Creamos y añadimos el objeto
-                canciones.add(new Song(titulo, path, fav, duration, reproductions));
-            } while (mCursor.moveToNext());
-        }
-        //Terminamos de usar el cursor
-        mCursor.close();
+        SongFactory sf = new SongFactory(mDb);
+        canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
+        if(canciones.size()==0) showEmptyPlaylistDialog();
         //Definimos el sistema de pestañas
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText(TAB_TITULO));
-        tabs.addTab(tabs.newTab().setText(TAB_DURACION));
-        tabs.addTab(tabs.newTab().setText(TAB_REPRODUCCIONES));
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-
+        setTabs(view);
         //Obtenemos el ListView
         ListView listView_songs = (ListView) view.findViewById(R.id.listview_canciones);
         listView_songs.setItemsCanFocus(true);
@@ -124,38 +110,6 @@ public class SongsFragment extends Fragment {
         adaptador = new SongAdapter(view.getContext(), canciones);
         //Ponemos el adaptador
         listView_songs.setAdapter(adaptador);
-        tabs.setOnTabSelectedListener(
-                new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        switch (tab.getText().toString()) {
-                            case TAB_TITULO:
-                                orderByTitle();
-                                break;
-                            case TAB_DURACION:
-                                orderByDuration();
-                                break;
-                            case TAB_REPRODUCCIONES:
-                                orderByReproductions();
-                                break;
-                            default:
-                                //No deberíamos llegar aquí
-                                Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
-                        }
-                        adaptador.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-                        // No necesiamos un comportamiento diferente
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-                        // No necesitamos un comportamiento diferente
-                    }
-                }
-        );
         return view;
     }
 
@@ -204,26 +158,23 @@ public class SongsFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_CONTEXT_EDIT_PLAYLIST:
-                Fragment f = new AddToPlayListFragment();
-                Bundle args = new Bundle();
-                args.putString(AddToPlayListFragment.ARG_PLAYLIST,PLAYLIST);
-                f.setArguments(args);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
+                goToAddToPlaylist();
                 return true;
             case MENU_CONTEXT_DELETE_FROM_PLAYLIST:
                 if(!mDb.isOpen())
                     mDb.open();
-                if(selectedSong!=null)
-                    mDb.deleteFromPlaylist(selectedSong,PLAYLIST);
+                if(selectedSong!=null) {
+                    mDb.deleteFromPlaylist(selectedSong, PLAYLIST);
+                    deleteFromListview(selectedSong);
+                }
                 return true;
             case MENU_CONTEXT_DELETE_SONG:
                 if(!mDb.isOpen())
                     mDb.open();
-                if(selectedSong!=null)
+                if(selectedSong!=null) {
                     mDb.deleteCancion(selectedSong);
-                selectedSong=null;
-                adaptador.notifyDataSetChanged();
+                    deleteFromListview(selectedSong);
+                }
                 return true;
         }
         //Si no es ninguno de los anteriores, llamamos al padre
@@ -317,6 +268,86 @@ public class SongsFragment extends Fragment {
         //Asignamos el listener
         searchView.setOnQueryTextListener(queryTextListener);
     }
+    private void goToAddToPlaylist(){
+        Fragment f = new AddToPlayListFragment();
+        Bundle args = new Bundle();
+        args.putString(AddToPlayListFragment.ARG_PLAYLIST,PLAYLIST);
+        f.setArguments(args);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
+    }
+    private void showEmptyPlaylistDialog(){
+        AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
+        ad.setMessage("Parece que tu Playlist está vacío. \n ¿Quieres añadir canciones?");
+
+        ad.setButton(AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+
+                goToAddToPlaylist();
+
+            } });
+        ad.setButton(AlertDialog.BUTTON_NEGATIVE,"Más tarde",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.dismiss();
+            }
+        });
+        ad.show();
 
 
+    }
+    private void setTabs(View view){
+        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText(TAB_TITULO));
+        tabs.addTab(tabs.newTab().setText(TAB_DURACION));
+        tabs.addTab(tabs.newTab().setText(TAB_REPRODUCCIONES));
+        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabs.setOnTabSelectedListener(
+                new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        switch (tab.getText().toString()) {
+                            case TAB_TITULO:
+                                orderByTitle();
+                                break;
+                            case TAB_DURACION:
+                                orderByDuration();
+                                break;
+                            case TAB_REPRODUCCIONES:
+                                orderByReproductions();
+                                break;
+                            default:
+                                //No deberíamos llegar aquí
+                                Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+                        }
+                        adaptador.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        // No necesiamos un comportamiento diferente
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        // No necesitamos un comportamiento diferente
+                    }
+                }
+        );
+    }
+    private void deleteFromListview(String selectedSong) {
+        int i = 0;
+        boolean deleted = false;
+        while(i<canciones.size() && !deleted){
+            if(canciones.get(i).getPath().equals(selectedSong)){
+                canciones.remove(i);
+                deleted=true;
+            }else{
+                i++;
+            }
+        }
+        selectedSong = null;
+        adaptador.notifyDataSetChanged();
+    }
 }
