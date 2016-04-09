@@ -28,6 +28,7 @@ public class PlaylistFactory {
             db.open();
         }
         List<Playlist> lista = new ArrayList<Playlist>();
+        List<Playlist> head = new ArrayList<Playlist>();
         if (mCursor.moveToFirst()) {
             do {
                 //Para cada fila de la base de datos, obtenemos todos los campos
@@ -36,9 +37,9 @@ public class PlaylistFactory {
                 String numCanciones = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_NUM_CANCIONES));
                 //Creamos y añadimos el objeto
                 if(nombrePlaylist.equals("Todas")){
-                    lista.add(new Playlist(R.drawable.ic_todas_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
+                    head.add(0,new Playlist(R.drawable.ic_todas_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
                 }else if(nombrePlaylist.equals("Favoritos")){
-                    lista.add(new Playlist(R.drawable.ic_favs_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
+                    head.add(head.size(),new Playlist(R.drawable.ic_favs_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
                 }else{
                     lista.add(new Playlist(R.drawable.ic_nueva_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
                 }
@@ -47,7 +48,8 @@ public class PlaylistFactory {
         }
         //Terminamos de usar el cursor
         mCursor.close();
-        return (List) lista;
+        head.addAll(lista);
+        return (List) head;
     }
 
     public List<Playlist> getAllPlaylist(){
