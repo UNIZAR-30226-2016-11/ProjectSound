@@ -1,7 +1,9 @@
 package proyectosoftware.projectsound.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.ContextMenu;
@@ -16,8 +18,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.List;
+
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.PlaylistAdapter;
+import proyectosoftware.projectsound.Factorys.PlaylistFactory;
 import proyectosoftware.projectsound.R;
 import proyectosoftware.projectsound.Tipos.Playlist;
 
@@ -34,6 +39,10 @@ import proyectosoftware.projectsound.Tipos.Playlist;
 public class PlaylistsFragment extends Fragment {
 
     private ListView lista;
+    private DbAdapter mdb;
+    private Context contexto = getContext();
+    private List<Playlist> datos_playlist = new ArrayList<Playlist>();
+
 
     public PlaylistsFragment() {
     }
@@ -43,8 +52,15 @@ public class PlaylistsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_playlist, container, false);
         getActivity().setTitle("Playlists");
-        ArrayList<Playlist> datos_playlist = new ArrayList<Playlist>();
 
+        //Obtener todos los datos sobre las playlist existentes
+        mdb = new DbAdapter(contexto);
+        PlaylistFactory plf = new PlaylistFactory(mdb);
+        datos_playlist = plf.getAllPlaylist();
+
+
+
+        //MODIFICAR
         //Referencia al boton para anadir nuevas playlist
         FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
 
@@ -57,15 +73,16 @@ public class PlaylistsFragment extends Fragment {
             }
         });
 
+        //FIN MODIFICAR
 
         //Ejemplos añadidos a la playlist HAY QUE MODIFICADAR LOS ULTIMOS CAMPOS !!!!
-        datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_TODAS, "0 pistas", "0 min"));
-        datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
+        //datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_TODAS, DbAdapter.KEY_NUM_CANCIONES, DbAdapter.KEY_DURACION_PLAYLIST));
+        //datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
 
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         lista = (ListView) view.findViewById(R.id.listview_playlist);
-        lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, datos_playlist) {
+        lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, (ArrayList<?>) datos_playlist) {
 
 
             /*
