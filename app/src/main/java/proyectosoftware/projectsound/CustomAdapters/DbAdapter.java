@@ -168,7 +168,7 @@ public class DbAdapter extends SQLiteRelacional {
 
     //devuelve todas las playlist
     public Cursor getAllPlaylist(){
-        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
+        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST,KEY_NUM_CANCIONES,KEY_DURACION_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
 //TODO NO SE DEBERIA USAR ESTO
     /*
