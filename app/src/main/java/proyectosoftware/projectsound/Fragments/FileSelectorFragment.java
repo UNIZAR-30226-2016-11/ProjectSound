@@ -25,7 +25,7 @@ public class FileSelectorFragment extends Fragment {
     private ArrayList<String> canciones = new ArrayList<String>();
     private ArrayList<String> rutas = new ArrayList<String>();
     private DbAdapter mDb;
-    private static boolean all_selected = false;
+    private static boolean all_selected = true;
 
     public FileSelectorFragment() {
     }
