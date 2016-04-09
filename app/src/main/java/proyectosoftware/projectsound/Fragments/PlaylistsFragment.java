@@ -46,12 +46,13 @@ public class PlaylistsFragment extends Fragment {
     private ListView lista;
     private DbAdapter mdb;
     private Context contexto = getContext();
+    private PlaylistAdapter adaptador;
     private List<Playlist> datos_playlist = new ArrayList<Playlist>();
     private static String selectedPlaylist = null;
+    private final int MENU_CONTEXT_RENAME_PLAYLIST = Menu.FIRST;
+    private final int MENU_CONTEXT_DELETE_PLAYLIST = Menu.FIRST+1;
 
-
-    public PlaylistsFragment() {
-    }
+    public PlaylistsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,18 +61,12 @@ public class PlaylistsFragment extends Fragment {
         getActivity().setTitle("Playlists");
 
 
-        //Ejemplos añadidos a la playlist HAY QUE MODIFICADAR LOS ULTIMOS CAMPOS !!!!
-        //datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_TODAS, DbAdapter.KEY_NUM_CANCIONES, DbAdapter.KEY_DURACION_PLAYLIST));
-        //datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
-
-
             //MODIFICAR
         //Referencia al boton para anadir nuevas playlist
         FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
 
 
         //FIN MODIFICAR
-
 
         //Montar listado de playlist
         montarListView(view);
@@ -95,6 +90,10 @@ public class PlaylistsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Incluye en el listview el contenido de la base de datos
+     * @param view
+     */
     private void montarListView(View view){
 
         //Obtener todos los datos sobre las playlist existentes
@@ -103,7 +102,8 @@ public class PlaylistsFragment extends Fragment {
         datos_playlist = plf.getAllPlaylist();
         //Creacion de lista en el listview
         lista = (ListView) view.findViewById(R.id.listview_playlist);
-        lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, (ArrayList<?>) datos_playlist) {
+
+        lista.setAdapter(adaptador = new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, (ArrayList<?>) datos_playlist) {
             /*
             * COMPRUEBA QUE EXISTEN LOS ITEMS CORRECTOS ANTES DE INSERTAR CUALQUIER ELEMENTO
             * Una vez realizada la comprobacion inserta la informacion
@@ -148,26 +148,69 @@ public class PlaylistsFragment extends Fragment {
         if(!selectedPlaylist.equals("Todas") && !selectedPlaylist.equals("Favoritos")){
             CreateMenu(menu);
         }
-        //montarListView(view);
-
     }
 
-    //TODO la funcionalidad de borrar no debo hacerla aqui
-    private void CreateMenu(Menu menu)
-    {
-        MenuItem mEdit = menu.add(0, 0, 0, "Editar nombre");
-        {
-            mEdit.setAlphabeticShortcut('a');
-
-        }
-        MenuItem mDelete = menu.add(0, 1, 1, "Eliminar");
-        {
-            //if(!mdb.isOpen()){
-              //  mdb.open();
-            //}
-            //mdb.deletePlaylist(selectedPlaylist);
-        }
+    private void CreateMenu(Menu menu) {
+        menu.add(Menu.NONE, MENU_CONTEXT_RENAME_PLAYLIST, Menu.NONE, "Modificar titulo");
+        menu.add(Menu.NONE, MENU_CONTEXT_DELETE_PLAYLIST, Menu.NONE, "Eliminar " + selectedPlaylist);
     }
+
+    public boolean onContextItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case MENU_CONTEXT_RENAME_PLAYLIST:
+                //TODO
+                return true;
+            case MENU_CONTEXT_DELETE_PLAYLIST:
+                //Abrir la conexion con la base de datos
+                if(!mdb.isOpen()){
+                    mdb.open();
+                }
+                if(selectedPlaylist!=null){
+                    //Eliminar de la base de datos la playlist con titulo = selectedPlaylist
+                    mdb.deletePlaylist(selectedPlaylist);
+                    //Eliminar del arraylist
+                    boolean eliminada = false;
+                    int i = 0;
+                    while(!eliminada && i < datos_playlist.size()){
+                        if(datos_playlist.get(i).getTituloPlaylist().equals(selectedPlaylist)){
+                            datos_playlist.remove(i);
+                            eliminada = true;
+                        }else{
+                            i++;
+                        }
+                    }
+                }
+                selectedPlaylist = null;
+                //actualizar listado mostrado por pantalla
+                adaptador.notifyDataSetChanged();
+                return true;
+        }
+        //Si no es ninguno de los anteriores, llamamos al padre
+        return super.onContextItemSelected(item);
+    }
+
+    //TODO forma de hacer el dialog para añadir playlist
+//    private void showEmptyPlaylistDialog(){
+//        android.support.v7.app.AlertDialog ad = new android.support.v7.app.AlertDialog.Builder(getActivity()).create();
+//        ad.setMessage("Parece que tu Playlist está vacío. \n ¿Quieres añadir canciones?");
+//
+//        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
+//
+//            public void onClick(DialogInterface dialog, int id) {
+//
+//                goToAddToPlaylist();
+//
+//            } });
+//        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE,"Más tarde",new DialogInterface.OnClickListener(){
+//            public void onClick(DialogInterface dialog, int id) {
+//
+//                dialog.dismiss();
+//            }
+//        });
+//        ad.show();
+//
+//
+//    }
 
 
 }
