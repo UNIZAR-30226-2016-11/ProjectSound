@@ -277,24 +277,26 @@ public class SongsFragment extends Fragment {
         fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
     }
     private void showEmptyPlaylistDialog(){
-        AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
-        ad.setMessage("Parece que tu Playlist está vacío. \n ¿Quieres añadir canciones?");
+        if( !PLAYLIST.equals(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS) && !PLAYLIST.equals(DbAdapter.DEFAULT_PLAYLIST_TODAS) ) {
+            AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
+            ad.setMessage("Parece que tu Playlist está vacío. \n ¿Quieres añadir canciones?");
 
-        ad.setButton(AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
+            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Añadir", new DialogInterface.OnClickListener() {
 
-            public void onClick(DialogInterface dialog, int id) {
+                public void onClick(DialogInterface dialog, int id) {
 
-                goToAddToPlaylist();
+                    goToAddToPlaylist();
 
-            } });
-        ad.setButton(AlertDialog.BUTTON_NEGATIVE,"Más tarde",new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Más tarde", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
 
-                dialog.dismiss();
-            }
-        });
-        ad.show();
-
+                    dialog.dismiss();
+                }
+            });
+            ad.show();
+        }
 
     }
     private void setTabs(View view){
