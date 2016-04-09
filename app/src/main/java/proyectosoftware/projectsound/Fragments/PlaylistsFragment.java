@@ -1,11 +1,15 @@
 package proyectosoftware.projectsound.Fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -14,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +47,7 @@ public class PlaylistsFragment extends Fragment {
     private DbAdapter mdb;
     private Context contexto = getContext();
     private List<Playlist> datos_playlist = new ArrayList<Playlist>();
+    private static String selectedPlaylist = null;
 
 
     public PlaylistsFragment() {
@@ -53,38 +59,51 @@ public class PlaylistsFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_playlist, container, false);
         getActivity().setTitle("Playlists");
 
-        //Obtener todos los datos sobre las playlist existentes
-        mdb = new DbAdapter(contexto);
-        PlaylistFactory plf = new PlaylistFactory(mdb);
-        datos_playlist = plf.getAllPlaylist();
-
-
-
-        //MODIFICAR
-        //Referencia al boton para anadir nuevas playlist
-        FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
-
-        registerForContextMenu(btn_anadir);
-
-        btn_anadir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               v.showContextMenu();
-            }
-        });
-
-        //FIN MODIFICAR
 
         //Ejemplos añadidos a la playlist HAY QUE MODIFICADAR LOS ULTIMOS CAMPOS !!!!
         //datos_playlist.add(new Playlist(R.drawable.ic_todas_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_TODAS, DbAdapter.KEY_NUM_CANCIONES, DbAdapter.KEY_DURACION_PLAYLIST));
         //datos_playlist.add(new Playlist(R.drawable.ic_favs_playlist_256x256, DbAdapter.DEFAULT_PLAYLIST_FAVORITOS, "0 pistas", "0 min"));
 
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            //MODIFICAR
+        //Referencia al boton para anadir nuevas playlist
+        FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
+
+
+        //FIN MODIFICAR
+
+
+        //Montar listado de playlist
+        montarListView(view);
+
+        registerForContextMenu(lista);
+
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> pariente, View view, int posicion, long id) {
+                Playlist elegido = (Playlist) pariente.getItemAtPosition(posicion);
+                Bundle args = new Bundle();
+                args.putString(SongsFragment.ARG_PLAYLIST, elegido.getTituloPlaylist());
+                SongsFragment f = new SongsFragment();
+                f.setArguments(args);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
+
+            }
+        });
+
+        return view;
+    }
+
+    private void montarListView(View view){
+
+        //Obtener todos los datos sobre las playlist existentes
+        mdb = new DbAdapter(contexto);
+        PlaylistFactory plf = new PlaylistFactory(mdb);
+        datos_playlist = plf.getAllPlaylist();
+        //Creacion de lista en el listview
         lista = (ListView) view.findViewById(R.id.listview_playlist);
         lista.setAdapter(new PlaylistAdapter(view.getContext(), R.layout.entrada_playlist, (ArrayList<?>) datos_playlist) {
-
-
             /*
             * COMPRUEBA QUE EXISTEN LOS ITEMS CORRECTOS ANTES DE INSERTAR CUALQUIER ELEMENTO
             * Una vez realizada la comprobacion inserta la informacion
@@ -114,46 +133,39 @@ public class PlaylistsFragment extends Fragment {
             }
 
         });
-
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> pariente, View view, int posicion, long id) {
-                Playlist elegido = (Playlist) pariente.getItemAtPosition(posicion);
-                Bundle args = new Bundle();
-                args.putString(SongsFragment.ARG_PLAYLIST, elegido.getTituloPlaylist());
-                SongsFragment f = new SongsFragment();
-                f.setArguments(args);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
-
-            }
-        });
-
-
-
-        return view;
     }
 
-    //COPIADO NO FINAL
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,ContextMenuInfo menuInfo)
     {
         super.onCreateContextMenu(menu, view, menuInfo);
-        CreateMenu(menu);
+        menu.setHeaderTitle("Opciones");
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        //Recoge el nombre de la playlist seleccionada por el usuario
+        selectedPlaylist = (datos_playlist.get((int)info.id).getTituloPlaylist());
+        //Descarta las playlist por defecto
+        if(!selectedPlaylist.equals("Todas") && !selectedPlaylist.equals("Favoritos")){
+            CreateMenu(menu);
+        }
+        //montarListView(view);
+
     }
 
-    //COPIADO NO FINAL
+    //TODO la funcionalidad de borrar no debo hacerla aqui
     private void CreateMenu(Menu menu)
     {
-        MenuItem mnu1 = menu.add(0, 0, 0, "Item 1");
+        MenuItem mEdit = menu.add(0, 0, 0, "Editar nombre");
         {
-            mnu1.setAlphabeticShortcut('a');
+            mEdit.setAlphabeticShortcut('a');
 
         }
-        MenuItem mnu2 = menu.add(0, 1, 1, "Item 2");
+        MenuItem mDelete = menu.add(0, 1, 1, "Eliminar");
         {
-            mnu2.setAlphabeticShortcut('b');
-
+            //if(!mdb.isOpen()){
+              //  mdb.open();
+            //}
+            //mdb.deletePlaylist(selectedPlaylist);
         }
     }
 
