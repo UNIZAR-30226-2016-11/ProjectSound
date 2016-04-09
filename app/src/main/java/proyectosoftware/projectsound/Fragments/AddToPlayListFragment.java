@@ -45,7 +45,7 @@ public class AddToPlayListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
-        getActivity().setTitle("Add to playlist"); //titulo del activity
+        getActivity().setTitle("Añadir a playlist"); //titulo del activity
         //PONIENDO EL BOTON DE CONFIRMACION
         setHasOptionsMenu(true);
         datos = new DbAdapter(contexto);
@@ -53,9 +53,9 @@ public class AddToPlayListFragment extends Fragment {
         //SACAR TODAS LAS CANCIONES QUE ESTAN ANIADIDAS
         final List<Song> todasCanciones = factoriaCanciones.getAllSongs();
         //SACAR CANCIONES DE UN PLAYLIST
-        final List<Song> cancionesPlaylist = factoriaCanciones.getAllFromPlaylist(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS); //TODO cambiar por el playlist que sea
+        final List<Song> cancionesPlaylist = factoriaCanciones.getAllFromPlaylist("Testeo"); //TODO cambiar por el playlist que sea
         TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
-        nombreLista.setText(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS); //TODO cambiar por el bueno
+        nombreLista.setText("Testeo"); //TODO cambiar por el bueno
         //LLENANDO LOS LISTVIEWS
         final List<String> todasCanciones_titulos = new ArrayList<String>();//Lista con los titulos
         for(int i=0;i<todasCanciones.size();i++) todasCanciones_titulos.add(todasCanciones.get(i).getTitle());
@@ -114,15 +114,21 @@ public class AddToPlayListFragment extends Fragment {
     /* Metodo al que se llama cuando se pulsa el boton de confirmar*/
     @Override
     public boolean onOptionsItemSelected (MenuItem menu){
-        /* Solo falta utilizar los metodos de la BBDD cuando este terminada*/
-        for(int i=0;i<porAniadir.size();i++){
-            //TODO aniadir elemento a la playlist
+        try{
+            /* Solo falta utilizar los metodos de la BBDD cuando este terminada*/
+            for(int i=0;i<porAniadir.size();i++){
+                datos.insertToPlaylist(porAniadir.get(i).getPath(),"Testeo");//TODO cambiar por la playlist conveniente
+            }
+            for(int i=0;i<porBorrar.size();i++){
+                datos.deleteFromPlaylist(porBorrar.get(i).getPath(),"Testeo");//TODO cambiar por la playlist conveniente
+            }
+            Toast.makeText(getContext(),"Cambios guardados",Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().popBackStack();
+            return true;
+        } catch (Exception e){
+            Toast.makeText(getContext(),"Ha ocurrido un error",Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().popBackStack();
+            return false;
         }
-        for(int i=0;i<porBorrar.size();i++){
-            //TODO quitar elemento de la playlist
-        }
-        Toast.makeText(getContext(),"Cambios guardados",Toast.LENGTH_LONG).show();
-        getActivity().getSupportFragmentManager().popBackStack();
-        return true;
     }
 }
