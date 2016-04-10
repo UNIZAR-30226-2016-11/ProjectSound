@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -28,15 +29,10 @@ import java.util.List;
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.PlaylistAdapter;
 import proyectosoftware.projectsound.Factorys.PlaylistFactory;
+import proyectosoftware.projectsound.MainActivity;
 import proyectosoftware.projectsound.R;
 import proyectosoftware.projectsound.Tipos.Playlist;
 
-
-/**
- * TODO Modificar comportamiento boton flotante
- * TODO Modificar pulsacion larga en cada playlist (para editar/borrar)
- * TODO Conectar con BBDD
- */
 
 /**
  * Fragmento para el contenido principal
@@ -51,7 +47,7 @@ public class PlaylistsFragment extends Fragment {
     private static String selectedPlaylist = null;
     private final int MENU_CONTEXT_RENAME_PLAYLIST = Menu.FIRST;
     private final int MENU_CONTEXT_DELETE_PLAYLIST = Menu.FIRST+1;
-
+    private View vista;
     public PlaylistsFragment() {}
 
     @Override
@@ -61,16 +57,21 @@ public class PlaylistsFragment extends Fragment {
         getActivity().setTitle("Playlists");
 
 
-            //MODIFICAR
         //Referencia al boton para anadir nuevas playlist
         FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
 
-
-        //FIN MODIFICAR
+        //Al pulsar el boton lanza el Dialog para anadir una nueva playlist
+        btn_anadir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewPlaylistDialog();
+            }
+        });
 
         //Montar listado de playlist
         montarListView(view);
 
+        //Anadir a cada elemento de la lista la funcion de pulsacion larga
         registerForContextMenu(lista);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +87,7 @@ public class PlaylistsFragment extends Fragment {
 
             }
         });
-
+        vista=view;
         return view;
     }
 
@@ -158,7 +159,9 @@ public class PlaylistsFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item){
         switch (item.getItemId()){
             case MENU_CONTEXT_RENAME_PLAYLIST:
-                //TODO
+                if(!selectedPlaylist.equals("Todas") && !selectedPlaylist.equals("Favoritos")){
+                    renamePlaylistDialog();
+                }
                 return true;
             case MENU_CONTEXT_DELETE_PLAYLIST:
                 //Abrir la conexion con la base de datos
@@ -189,28 +192,94 @@ public class PlaylistsFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    //TODO forma de hacer el dialog para añadir playlist
-//    private void showEmptyPlaylistDialog(){
-//        android.support.v7.app.AlertDialog ad = new android.support.v7.app.AlertDialog.Builder(getActivity()).create();
-//        ad.setMessage("Parece que tu Playlist está vacío. \n ¿Quieres añadir canciones?");
-//
-//        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
-//
-//            public void onClick(DialogInterface dialog, int id) {
-//
-//                goToAddToPlaylist();
-//
-//            } });
-//        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE,"Más tarde",new DialogInterface.OnClickListener(){
-//            public void onClick(DialogInterface dialog, int id) {
-//
-//                dialog.dismiss();
-//            }
-//        });
-//        ad.show();
-//
-//
-//    }
+    /**
+     * Genera ventana dialog para introducir titulo de la nueva playlist
+     */
+    private void addNewPlaylistDialog(){
+        android.support.v7.app.AlertDialog ad = new android.support.v7.app.AlertDialog.Builder(getActivity()).create();
+        ad.setTitle("Crear una nueva Playlist");
+        ad.setMessage("Introducir titulo");
+
+        //Introducir un editText en el dialog, para recoger el nuevo titulo
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.create_playlist_dialog, (ViewGroup) getView(), false);
+        final EditText input = (EditText) viewInflated.findViewById(R.id.dialog_createplaylist);
+        ad.setView(viewInflated);
+
+        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+
+                String newTitle = "";
+                newTitle = input.getText().toString();
+                if(!mdb.isOpen()){
+                    mdb.open();
+                }
+                //TODO controlar que no intente insertar algo que existe
+                if(!newTitle.equals("")){
+                    mdb.insertNewPlaylist(newTitle);
+                    montarListView(vista);
+                    adaptador.notifyDataSetChanged();
+                }
+
+                ;//llamada a la creacion de playlist
+
+            }
+        });
+        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.dismiss();
+            }
+        });
+        ad.show();
+
+
+    }
+
+    /**
+     * Genera ventana dialog para modificar titulo de una playlist
+     */
+    private void renamePlaylistDialog(){
+        android.support.v7.app.AlertDialog ad = new android.support.v7.app.AlertDialog.Builder(getActivity()).create();
+        ad.setTitle("Editar nombre de Playlist");
+        ad.setMessage("Introducir nuevo titulo");
+
+        //Introducir un editText en el dialog, para recoger el nuevo titulo
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.create_playlist_dialog, (ViewGroup) getView(), false);
+        final EditText input = (EditText) viewInflated.findViewById(R.id.dialog_createplaylist);
+        ad.setView(viewInflated);
+
+        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,"Modificar", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+
+                String newTitle = "";
+                newTitle = input.getText().toString();
+                if(!mdb.isOpen()){
+                    mdb.open();
+                }
+                //TODO controlar que no intente insertar algo que existe
+                if(!newTitle.equals("")){
+                    mdb.cambiar_nombre_playlist(selectedPlaylist,newTitle);
+                    montarListView(vista);
+                    adaptador.notifyDataSetChanged();
+                }
+
+                ;//llamada a la creacion de playlist
+
+            }
+        });
+        ad.setButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.dismiss();
+            }
+        });
+        ad.show();
+
+
+    }
+
 
 
 }
