@@ -46,6 +46,10 @@ public class DbAdapter extends SQLiteRelacional {
         return this;
     }
 
+    public boolean isOpen(){
+        return  mDb.isOpen();
+    }
+
     public void close() {
         mDbHelper.close();
     }
@@ -111,19 +115,19 @@ public class DbAdapter extends SQLiteRelacional {
                 return -1;
             }
         }
-    public long insertPlaylist(String nombre){
-        if(nombre.length()>0){
+    public long insertNewPlaylist(String nombrePlaylist){
+        if(nombrePlaylist.length()>0){
             ContentValues initialValues = new ContentValues();
-            initialValues.put(KEY_NOMBRE_PLAYLIST,nombre);
+            initialValues.put(KEY_NOMBRE_PLAYLIST,nombrePlaylist);
             initialValues.put(KEY_DURACION_PLAYLIST, 0);
             initialValues.put(KEY_NUM_CANCIONES,0);
             return mDb.insert(DATABASE_TABLE_PLAYLIST, null, initialValues);
         }else{
-            Log.d(TAG,"Insercción erronea ("+nombre+","+0+","+ 0);
+            Log.d(TAG,"Insercción erronea ("+nombrePlaylist+","+0+","+ 0);
             return -1;
         }
     }
-    public long insertPertenece(String rutaCancion, String playlist){
+    public long insertToPlaylist(String rutaCancion, String playlist){
         if(rutaCancion.length()>0 && playlist.length()>0){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_CANCION_PERTENECE,rutaCancion);
@@ -164,13 +168,14 @@ public class DbAdapter extends SQLiteRelacional {
 
     //devuelve todas las playlist
     public Cursor getAllPlaylist(){
-        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
+        return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST,KEY_NUM_CANCIONES,KEY_DURACION_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
-
+//TODO NO SE DEBERIA USAR ESTO
+    /*
     //devuelve numero de canciones en una playlist
     /*public int  getNumero(String playlist){
         return mDb.
-    }*/
+    }
 
     //devuelve la duracion de una playlist
 
@@ -220,7 +225,7 @@ public class DbAdapter extends SQLiteRelacional {
     public  Cursor lista_ryta_favoritos(){
         return mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_RUTA},KEY_FAVORITO+"="+1,null,null,null,KEY_RUTA);
     }
-
+    */
 
 
 
@@ -234,6 +239,35 @@ public class DbAdapter extends SQLiteRelacional {
         values.put(KEY_DURACION_PLAYLIST,dur);
         values.put(KEY_NUM_CANCIONES,num);
         mDb.update(playlist,values,KEY_NOMBRE_PLAYLIST+"="+ playlist,null);
+    }
+
+
+    public boolean cambiar_nombre_playlist(String nombre_viejo, String nombre_nuevo){
+        if(insertNewPlaylist(nombre_nuevo)<0){
+            return false;
+        }
+        else{
+            Log.d(nombre_nuevo,"insertado");
+        }
+        Cursor c= getAllFromPlaylist(nombre_viejo);
+        if(c.moveToFirst()){
+
+            do {
+                String ruta = c.getString(c.getColumnIndex(DbAdapter.KEY_RUTA));
+                Log.d(nombre_nuevo, ruta);
+
+                if(insertToPlaylist(ruta, nombre_nuevo)<0){
+
+                    return false;
+                }
+                else{
+                    Log.d("insertado",ruta);
+                }
+            } while(c.moveToNext());
+        }
+        return deletePlaylist(nombre_viejo);
+
+
     }
 
     public  Cursor getNumSongFromPlaylist(String playlist){
@@ -250,22 +284,83 @@ public class DbAdapter extends SQLiteRelacional {
 
        boolean borrar;
         boolean borrado;
-        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion,null)>0;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"=?", new String[] {cancion})>0;
+        if(borrar){
+            Log.d("borrado","cancion de pertenece");
+        }
 
-        borrado = mDb.delete(DATABASE_TABLE_CANCION,KEY_RUTA+"="+cancion,null)>0;
-         return borrar&&borrado;
+        else{
+            Log.d("no borrado","cancion de pertenece");
+        }
+        borrado = mDb.delete(DATABASE_TABLE_CANCION,KEY_RUTA+"=?", new String[] {cancion})>0;
+        if(borrado){
+            Log.d("borrado","cancion de tabla");
+        }
+
+        else{
+            Log.d("no borrado","cancion de tabla");
+        }
+        return borrar&&borrado;
     }
 
     public boolean deletePlaylist(String playlist){
         boolean borrar;
         boolean borrado;
-        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_NOM_PLAYLIST_PERTENCE+"="+KEY_NOM_PLAYLIST_PERTENCE,null)>0;
-        borrado = mDb.delete(DATABASE_TABLE_PLAYLIST,KEY_NOMBRE_PLAYLIST+"="+playlist,null)>0;
+        borrar = mDb.delete(DATABASE_TABLE_PERTENECE,KEY_NOM_PLAYLIST_PERTENCE+"=?", new String[] {playlist})>0;
+        if(borrar){
+            Log.d("borrado","playlist de pertenece");
+        }
+
+        else{
+            Log.d("no borrado","playlist de pertenece");
+        }
+        borrado = mDb.delete(DATABASE_TABLE_PLAYLIST,KEY_NOMBRE_PLAYLIST+"=?", new String[] {playlist})>0;
+        if(borrado){
+            Log.d("borrado","playlist de tabla");
+        }
+
+        else{
+            Log.d("no borrado","playlist de tabla");
+        }
         return borrar&&borrado;
+
+
     }
 
 
     public boolean deleteFromPlaylist(String cancion, String playlist){
-        return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"="+cancion+"AND"+KEY_NOM_PLAYLIST_PERTENCE+"="+playlist,null)>0;
+           return mDb.delete(DATABASE_TABLE_PERTENECE,KEY_CANCION_PERTENECE+"=?"+" AND "+KEY_NOM_PLAYLIST_PERTENCE+"=?",new String[]{cancion,playlist})>0;
+
     }
+
+
+   /* public int incrementarReproduccionesCancion(String ruta){
+
+
+
+
+        Cursor c = mDb.query(DATABASE_TABLE_CANCION, new String[] {KEY_REPRODUCCIONES}, KEY_RUTA+"= ?"+ruta, null,null , null,null);
+
+
+
+
+
+
+    }*/
+    public void incrementarReproduccionCancion(String ruta){
+        Cursor c = mDb.query(DATABASE_TABLE_CANCION, new String[]{KEY_REPRODUCCIONES} ,KEY_RUTA+"= ?",new String[]{ruta},null,null,null,null);
+
+        c.moveToFirst();
+        int reproducciones = c.getInt(c.getColumnIndex(DbAdapter.KEY_REPRODUCCIONES));
+
+        ContentValues args = new ContentValues();
+        reproducciones++;
+        args.put(KEY_REPRODUCCIONES, reproducciones);
+        mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{ruta});
+
+
+
+    }
+
+
 }

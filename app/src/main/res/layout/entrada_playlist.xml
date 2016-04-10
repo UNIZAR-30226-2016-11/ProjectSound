@@ -10,6 +10,7 @@
         android:layout_height="60dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
+        android:background="@android:color/transparent"
         android:contentDescription="Imagen que se muestra en la lista"
         android:src="@android:drawable/ic_menu_gallery" />
     <LinearLayout

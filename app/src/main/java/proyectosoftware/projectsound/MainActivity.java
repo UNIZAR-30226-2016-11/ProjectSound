@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         DbAdapter db = new DbAdapter(getApplicationContext());
         db.open();
+        db.insertNewPlaylist("Testeo");
         //Hacemos pantalla de inicio el reproductor
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, new PlayerFragment()).commit();
@@ -107,10 +108,7 @@ public class MainActivity extends AppCompatActivity
                 args.putString(SongsFragment.ARG_PLAYLIST,DbAdapter.DEFAULT_PLAYLIST_FAVORITOS);
                 f = new SongsFragment();
                 break;
-            //TODO borrar estas opciones cuando no se necesite
-            case R.id.nav_add_to_playlist:
-                f = new AddToPlayListFragment();
-        }
+            }
         f.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();

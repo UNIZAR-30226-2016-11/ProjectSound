@@ -20,13 +20,4 @@
             android:title="Mis favoritos" />
     </group>
 
-    <item android:title="Debug">
-        <menu>
-            <item
-                android:id="@+id/nav_add_to_playlist"
-                android:icon="@drawable/ic_queue_music_black_48dp"
-                android:title="Añadir al playlist" />
-        </menu>
-    </item>
-
 </menu>
