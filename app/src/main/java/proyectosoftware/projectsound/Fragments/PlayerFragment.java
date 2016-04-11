@@ -68,7 +68,7 @@ public class PlayerFragment extends Fragment {
             PLAYLIST=getArguments().getString(ARG_PLAYLIST);
             canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
             //Aqui cojo la canción que acaba de ser pulsada
-            Song cancionActual = canciones.get(getArguments().getInt(ARG_SONG));
+            final Song cancionActual = canciones.get(getArguments().getInt(ARG_SONG));
 
 
             // nombre_playlist tiene el playlist actual
@@ -95,7 +95,36 @@ public class PlayerFragment extends Fragment {
             //Le pongo el numero de reproducciones
             duracion.setText(cancionActual.getDuration());
 
-            //TODO:FALTAN EL PARAMETRO (ES FAVORITO) Y ACTUALIZAR NUMERO DE REPRODUCTIONES AQUI EN VEZ DE EN LA PARTE DE CEBO. ADEMAS DE REDIMENSIONAR LA IMAGEN. FALTA PROGRAMAR LOS BOTONES SIGUIENTE; PLAY; Y ANTERIOR; Y TAMBIEN LA BARRA DE ESTADO DEL REPRODUCTOR Y LA REPRODUCCION EN SI.
+
+            final ImageButton isFavorite = (ImageButton) view.findViewById(R.id.favoritoCancion);
+
+            if (cancionActual.getIsFavorite()) {
+                isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+            } else {
+                isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+            // 5. Ponemos el listener del boton de favoritos
+            isFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cancionActual.getIsFavorite()) {
+                        //Ya no es favorito, cambiammos icono y guardamos en la BD
+                        isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        cancionActual.setIsFavorite(false, v.getContext());
+                    } else {
+                        //Ahora es favorito, cambiamos icono y guardamos en la BD
+                        isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                        cancionActual.setIsFavorite(true, v.getContext());
+                    }
+                }
+            });
+
+
+            //TODO:FALTA ACTUALIZAR NUMERO DE REPRODUCCIONES AQUI EN VEZ DE EN LA PARTE DE CEBO. ADEMAS DE REDIMENSIONAR LA IMAGEN. FALTA PROGRAMAR LOS BOTONES SIGUIENTE; PLAY; Y ANTERIOR; Y TAMBIEN LA BARRA DE ESTADO DEL REPRODUCTOR Y LA REPRODUCCION EN SI.
+
+
+
+
         }
 
         botonFav = (ImageButton) view.findViewById(R.id.favoritoCancion);
