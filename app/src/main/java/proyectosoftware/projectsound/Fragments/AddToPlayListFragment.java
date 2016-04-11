@@ -1,10 +1,8 @@
 package proyectosoftware.projectsound.Fragments;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,12 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +29,11 @@ import proyectosoftware.projectsound.Tipos.Song;
 public class AddToPlayListFragment extends Fragment {
 
     public static final String ARG_PLAYLIST = "play";
-    private final List<Song> porAniadir = new ArrayList<Song>();
-    private final List<Song> porBorrar = new ArrayList<Song>();
+    private final List<Song> porAniadir = new ArrayList<>();
+    private final List<Song> porBorrar = new ArrayList<>();
     private Context contexto = getContext();
     private DbAdapter datos;
+    private String playlist;
 
     public AddToPlayListFragment() {}
 
@@ -46,6 +42,9 @@ public class AddToPlayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_to_playlist, container, false);
         getActivity().setTitle("Añadir a playlist"); //titulo del activity
+        //Obteniendo el nombre de la playList
+        if(getArguments().getString(ARG_PLAYLIST) == null) playlist="ninguna";
+        else playlist = getArguments().getString(ARG_PLAYLIST);
         //PONIENDO EL BOTON DE CONFIRMACION
         setHasOptionsMenu(true);
         datos = new DbAdapter(contexto);
@@ -53,19 +52,19 @@ public class AddToPlayListFragment extends Fragment {
         //SACAR TODAS LAS CANCIONES QUE ESTAN ANIADIDAS
         final List<Song> todasCanciones = factoriaCanciones.getAllSongs();
         //SACAR CANCIONES DE UN PLAYLIST
-        final List<Song> cancionesPlaylist = factoriaCanciones.getAllFromPlaylist("Testeo"); //TODO cambiar por el playlist que sea
+        final List<Song> cancionesPlaylist = factoriaCanciones.getAllFromPlaylist(playlist);
         TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
-        nombreLista.setText("Testeo"); //TODO cambiar por el bueno
+        nombreLista.setText(playlist);
         //LLENANDO LOS LISTVIEWS
-        final List<String> todasCanciones_titulos = new ArrayList<String>();//Lista con los titulos
+        final List<String> todasCanciones_titulos = new ArrayList<>();//Lista con los titulos
         for(int i=0;i<todasCanciones.size();i++) todasCanciones_titulos.add(todasCanciones.get(i).getTitle());
         ListView allSongs = (ListView) view.findViewById(R.id.cancionesSistema); //LisView izquierdo
-        final ArrayAdapter<String> adaptador = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones_titulos);
+        final ArrayAdapter<String> adaptador = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones_titulos);
         allSongs.setAdapter(adaptador);
-        final List<String> cancionesPlaylist_titulos = new ArrayList<String>();
+        final List<String> cancionesPlaylist_titulos = new ArrayList<>();
         for(int i=0;i<cancionesPlaylist.size();i++) cancionesPlaylist_titulos.add(cancionesPlaylist.get(i).getTitle());
         ListView playlistSongs = (ListView) view.findViewById(R.id.playlist); //LisView derecho
-        final ArrayAdapter<String> lista = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist_titulos);
+        final ArrayAdapter<String> lista = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist_titulos);
         playlistSongs.setAdapter(lista);
         //CAPTURANDO ACCIONES EN EL LISTVIEW IZQUIERDO
         allSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,10 +116,10 @@ public class AddToPlayListFragment extends Fragment {
         try{
             /* Solo falta utilizar los metodos de la BBDD cuando este terminada*/
             for(int i=0;i<porAniadir.size();i++){
-                datos.insertToPlaylist(porAniadir.get(i).getPath(),"Testeo");//TODO cambiar por la playlist conveniente
+                datos.insertToPlaylist(porAniadir.get(i).getPath(),playlist);
             }
             for(int i=0;i<porBorrar.size();i++){
-                datos.deleteFromPlaylist(porBorrar.get(i).getPath(),"Testeo");//TODO cambiar por la playlist conveniente
+                datos.deleteFromPlaylist(porBorrar.get(i).getPath(),playlist);
             }
             Toast.makeText(getContext(),"Cambios guardados",Toast.LENGTH_LONG).show();
             getActivity().getSupportFragmentManager().popBackStack();
