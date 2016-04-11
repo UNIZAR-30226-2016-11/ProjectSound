@@ -113,7 +113,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
                 PlayerFragment f = new PlayerFragment();
                 Bundle args = new Bundle();
                 args.putString(PlayerFragment.ARG_PLAYLIST,playlist);
-                args.putString(PlayerFragment.ARG_SONG,songArrayList.get(position).getPath());
+                args.putInt(PlayerFragment.ARG_SONG,position);
                 f.setArguments(args);
                 FragmentActivity fa =  (FragmentActivity)getContext();
                 FragmentManager fragmentManager = fa.getSupportFragmentManager();
