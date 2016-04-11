@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +34,9 @@ public class PlayerFragment extends Fragment {
     ImageButton siguienteCancion; // Botón adelante
     public static final String ARG_LAYOUT = "Layout";
     private static String PLAYLIST;
+    private static String SONG;
     public static final String ARG_PLAYLIST = "reproductor";
-    private static SongAdapter adaptador;
-    private static ArrayList<Song> canciones;
-    private DbAdapter mDb;
-
+    public static final String ARG_SONG = "cancion";
 
     public PlayerFragment() {
     }
@@ -63,15 +62,19 @@ public class PlayerFragment extends Fragment {
         botonListaPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(getContext(),"Playlist el que sea",Toast.LENGTH_SHORT).show();
                 //Obtenemos el playlist
                 Log.w("PRUEBA", "Estoy antes del if");
-                if (getArguments()==null) {
+                if (getArguments() == null || getArguments().getString(ARG_PLAYLIST) == null) {
                     PLAYLIST = "None";
-                    Log.w("SONGFRAGMENT", "WARNING: null argument ARG_PLAYLIST");
+                    Fragment f = new PlaylistsFragment();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
                 } else {
                     PLAYLIST = getArguments().getString(ARG_PLAYLIST);
+                    SONG = getArguments().getString(ARG_SONG);
+
+                    Log.w("VAMOS BIEN", "" + PLAYLIST);
                 }
 
                 //Machaca la posición en el navigationDrawer por si hemos pulsado atrás desde otra pantalla
