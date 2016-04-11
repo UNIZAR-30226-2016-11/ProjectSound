@@ -52,6 +52,8 @@ public class SongsFragment extends Fragment {
     private DbAdapter mDb;
     private static String PLAYLIST;
     private static String selectedSong = null;
+    private static String ORDER_BY;
+    private SongFactory sf;
 
     /**
      * Constructor por defencto
@@ -97,7 +99,7 @@ public class SongsFragment extends Fragment {
         mDb = new DbAdapter(view.getContext());
         if(!mDb.isOpen()) mDb.open();
         //obtenemos las canciones
-        SongFactory sf = new SongFactory(mDb);
+        sf = new SongFactory(mDb);
         canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
         if(canciones.size()==0) showEmptyPlaylistDialog();
         //Definimos el sistema de pestañas
@@ -107,7 +109,7 @@ public class SongsFragment extends Fragment {
         listView_songs.setItemsCanFocus(true);
         //Habilitamos la creación de los contextmenu
         registerForContextMenu(listView_songs);
-        adaptador = new SongAdapter(view.getContext(), canciones, PLAYLIST);
+        adaptador = new SongAdapter(view.getContext(), canciones, PLAYLIST,ORDER_BY);
         //Ponemos el adaptador
         listView_songs.setAdapter(adaptador);
         return view;
@@ -179,48 +181,6 @@ public class SongsFragment extends Fragment {
         }
         //Si no es ninguno de los anteriores, llamamos al padre
         return super.onContextItemSelected(item);
-    }
-    /**
-     * Organiza las canciones por su duración de mayor a menor
-     */
-    private void orderByDuration() {
-        if (canciones.size() > 0) {
-            Collections.sort(canciones, new Comparator<Song>() {
-                @Override
-                public int compare(final Song object1, final Song object2) {
-                    return Integer.valueOf(object2.getDuration_seconds())
-                            .compareTo(object1.getDuration_seconds());
-                }
-            });
-        }
-    }
-
-    /**
-     * Organiza las canciones por el Título
-     */
-    private void orderByTitle() {
-        if (canciones.size() > 0) {
-            Collections.sort(canciones, new Comparator<Song>() {
-                @Override
-                public int compare(final Song object1, final Song object2) {
-                    return object1.getTitle().compareTo(object2.getTitle());
-                }
-            });
-        }
-    }
-
-    /**
-     * Organiza las canciones por las reproducciones
-     */
-    private void orderByReproductions() {
-        if (canciones.size() > 0) {
-            Collections.sort(canciones, new Comparator<Song>() {
-                @Override
-                public int compare(final Song object1, final Song object2) {
-                    return object2.getNum_reproductions().compareTo(object1.getNum_reproductions());
-                }
-            });
-        }
     }
 
     /**
@@ -311,13 +271,16 @@ public class SongsFragment extends Fragment {
                     public void onTabSelected(TabLayout.Tab tab) {
                         switch (tab.getText().toString()) {
                             case TAB_TITULO:
-                                orderByTitle();
+                                ORDER_BY=DbAdapter.KEY_TITULO;
+                                sf.orderByTitle(canciones);
                                 break;
                             case TAB_DURACION:
-                                orderByDuration();
+                                ORDER_BY=DbAdapter.KEY_DURACION;
+                                sf.orderByDuration(canciones);
                                 break;
                             case TAB_REPRODUCCIONES:
-                                orderByReproductions();
+                                ORDER_BY=DbAdapter.KEY_REPRODUCCIONES;
+                                sf.orderByReproductions(canciones);
                                 break;
                             default:
                                 //No deberíamos llegar aquí

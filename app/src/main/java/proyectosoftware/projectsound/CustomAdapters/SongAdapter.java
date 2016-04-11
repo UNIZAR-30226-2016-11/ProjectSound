@@ -28,7 +28,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
     private final Context context;
     private ArrayList<Song> songArrayList;
     private ArrayList<Song> backup;
-    private static String playlist ="";
+    private static String playlist,ORDER_BY;
 
     /**
      * Constructor por defecto
@@ -36,13 +36,14 @@ public class SongAdapter extends ArrayAdapter<Song> {
      * @param context       Context donde se va a usar
      * @param songArrayList ArrayList de las canciones
      */
-    public SongAdapter(Context context, ArrayList<Song> songArrayList,String playlist) {
+    public SongAdapter(Context context, ArrayList<Song> songArrayList,String playlist, String ORDER_BY) {
 
         super(context, R.layout.song_row, songArrayList);
         this.context = context;
         this.songArrayList = songArrayList;
         this.backup = new ArrayList<>(songArrayList);
         this.playlist=playlist;
+        this.ORDER_BY=ORDER_BY;
     }
 
     /**
@@ -114,6 +115,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
                 Bundle args = new Bundle();
                 args.putString(PlayerFragment.ARG_PLAYLIST,playlist);
                 args.putInt(PlayerFragment.ARG_SONG,position);
+                args.putString(PlayerFragment.ARG_ORDERBY,ORDER_BY);
                 f.setArguments(args);
                 FragmentActivity fa =  (FragmentActivity)getContext();
                 FragmentManager fragmentManager = fa.getSupportFragmentManager();

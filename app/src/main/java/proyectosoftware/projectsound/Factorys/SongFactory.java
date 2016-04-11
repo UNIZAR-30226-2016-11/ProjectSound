@@ -3,6 +3,8 @@ package proyectosoftware.projectsound.Factorys;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
@@ -44,5 +46,46 @@ public class SongFactory {
         if(!db.isOpen())
             db.open();
         return extractSongs(db.getAllFromPlaylist(playlist));
+    }
+    /**
+     * Organiza las canciones por las reproducciones
+     */
+    public void orderByReproductions(ArrayList<Song> canciones) {
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return object2.getNum_reproductions().compareTo(object1.getNum_reproductions());
+                }
+            });
+        }
+    }
+    /**
+     * Organiza las canciones por su duración de mayor a menor
+     */
+    public void orderByDuration(ArrayList<Song> canciones) {
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return Integer.valueOf(object2.getDuration_seconds())
+                            .compareTo(object1.getDuration_seconds());
+                }
+            });
+        }
+    }
+
+    /**
+     * Organiza las canciones por el Título
+     */
+    public void orderByTitle(ArrayList<Song> canciones) {
+        if (canciones.size() > 0) {
+            Collections.sort(canciones, new Comparator<Song>() {
+                @Override
+                public int compare(final Song object1, final Song object2) {
+                    return object1.getTitle().compareTo(object2.getTitle());
+                }
+            });
+        }
     }
 }
