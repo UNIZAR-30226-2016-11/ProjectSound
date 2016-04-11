@@ -27,11 +27,12 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_below="@+id/textView_playlist_todas">
         <ImageButton
+            android:id="@+id/botonListaPlaylist"
             android:layout_width="@android:dimen/app_icon_size"
             android:layout_height="@android:dimen/app_icon_size"
             android:clickable="true"
+            android:background="@android:color/transparent"
             android:layout_alignParentEnd="true"
-            android:background="#FFFFFF"
             android:src="@drawable/ic_view_list_black_24dp"
             />
     </RelativeLayout>
@@ -47,6 +48,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:src="@drawable/caratula"
+            android:background="@android:color/transparent"
             android:layout_centerVertical="true"
             android:scaleType="fitXY"
             />
@@ -55,7 +57,8 @@
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="125dp"
+        android:layout_alignParentBottom="true">
 
         <!-- NOMBRE CANTANTE, CANCION, MINUTOS Y FAV -->
         <RelativeLayout
@@ -154,9 +157,10 @@
 
             <!-- botón atrás -->
             <ImageButton
+                android:id="@+id/anteriorCancion"
                 android:layout_toLeftOf="@+id/play_button1"
-                android:layout_width="@android:dimen/app_icon_size"
                 android:layout_height="@android:dimen/app_icon_size"
+                android:layout_width="@android:dimen/app_icon_size"
                 android:clickable="true"
                 android:background="#FFFF44"
                 android:src="@drawable/ic_fast_rewind_black_24dp"
@@ -193,6 +197,7 @@
                 />
             <!-- botón adelante -->
             <ImageButton
+                android:id="@+id/siguienteCancion"
                 android:layout_toRightOf="@+id/play_button2"
                 android:background="#FFFF44"
                 android:clickable="true"
