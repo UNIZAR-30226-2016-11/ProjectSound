@@ -73,7 +73,7 @@ public class SongsFragment extends Fragment {
         //Generamos la vista
         View view = inflater.inflate(R.layout.song_layout, container, false);
         //Obtemos la playlist
-        if (getArguments().getString(ARG_PLAYLIST) == null) {
+        if (getArguments() == null) {
             PLAYLIST = "None";
             Log.w("SONGFRAGMENT", "WARNING: null argument ARG_PLAYLIST");
         } else {
@@ -107,7 +107,7 @@ public class SongsFragment extends Fragment {
         listView_songs.setItemsCanFocus(true);
         //Habilitamos la creación de los contextmenu
         registerForContextMenu(listView_songs);
-        adaptador = new SongAdapter(view.getContext(), canciones);
+        adaptador = new SongAdapter(view.getContext(), canciones, PLAYLIST);
         //Ponemos el adaptador
         listView_songs.setAdapter(adaptador);
         return view;

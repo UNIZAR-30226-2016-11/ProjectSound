@@ -1,6 +1,11 @@
 package proyectosoftware.projectsound.CustomAdapters;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import proyectosoftware.projectsound.Fragments.PlayerFragment;
 import proyectosoftware.projectsound.R;
 import proyectosoftware.projectsound.Tipos.Song;
 
@@ -22,6 +28,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
     private final Context context;
     private ArrayList<Song> songArrayList;
     private ArrayList<Song> backup;
+    private static String playlist ="";
 
     /**
      * Constructor por defecto
@@ -29,12 +36,13 @@ public class SongAdapter extends ArrayAdapter<Song> {
      * @param context       Context donde se va a usar
      * @param songArrayList ArrayList de las canciones
      */
-    public SongAdapter(Context context, ArrayList<Song> songArrayList) {
+    public SongAdapter(Context context, ArrayList<Song> songArrayList,String playlist) {
 
         super(context, R.layout.song_row, songArrayList);
         this.context = context;
         this.songArrayList = songArrayList;
         this.backup = new ArrayList<>(songArrayList);
+        this.playlist=playlist;
     }
 
     /**
@@ -62,7 +70,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // 2. Obtenemmos el rowview
-        View rowView = inflater.inflate(R.layout.song_row, null);
+        final View rowView = inflater.inflate(R.layout.song_row, null);
 
         // 3. Obtenemos los elementos de la vista
         TextView reproductions = (TextView) rowView.findViewById(R.id.num_repro);
@@ -102,6 +110,14 @@ public class SongAdapter extends ArrayAdapter<Song> {
                 if(!db.isOpen())
                     db.open();
                 db.incrementarReproduccionCancion(songArrayList.get(position).getPath());
+                PlayerFragment f = new PlayerFragment();
+                Bundle args = new Bundle();
+                args.putString(PlayerFragment.ARG_PLAYLIST,playlist);
+                args.putString(PlayerFragment.ARG_SONG,songArrayList.get(position).getPath());
+                f.setArguments(args);
+                FragmentActivity fa =  (FragmentActivity)getContext();
+                FragmentManager fragmentManager = fa.getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
             }
         });
         //7. Ponemos el listener en la celda de larga pulsación
