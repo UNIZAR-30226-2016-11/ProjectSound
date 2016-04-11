@@ -10,13 +10,14 @@
         android:layout_height="25dp"
         android:id="@+id/textView_playlist_todas">
         <TextView
+            android:id="@+id/texto_playlist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="2dp"
             android:textAlignment="center"
             android:paddingTop="4dp"
             android:background="#CCCCCC"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:textColor="#000000"
             android:text="Playlist:Todas "/>
     </RelativeLayout>
@@ -77,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/titulo_cancion_reproductor"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -90,14 +92,15 @@
 
             <!-- NOMBRE CANCION, MINUTOS Y FAVORITO -->
             <RelativeLayout
+                android:layout_below="@id/nombre_cantante"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/nombre_cantante">
+                >
 
                 <!-- nombre de la cancion -->
                 <TextView
-                    android:id="@+id/nombre_cancion"
+                    android:id="@+id/subtitulo_cancion_reproductor"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -109,6 +112,7 @@
 
                 <!-- minutos de la cancion -->
                 <TextView
+                    android:id="@+id/duracion"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingTop="4dp"
@@ -125,7 +129,7 @@
                     android:layout_height="@android:dimen/app_icon_size"
                     android:clickable="true"
                     android:background="#FFCC44"
-                    android:layout_alignEnd="@+id/nombre_cancion"
+                    android:layout_alignEnd="@+id/subtitulo_cancion_reproductor"
                     android:src="@drawable/ic_favorite_black_24dp"/>
 
            </RelativeLayout>

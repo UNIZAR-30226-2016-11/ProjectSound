@@ -34,9 +34,15 @@ public class PlayerFragment extends Fragment {
     ImageButton siguienteCancion; // Botón adelante
     public static final String ARG_LAYOUT = "Layout";
     private static String PLAYLIST;
-    private static String SONG;
+    private static int POS;
+    private static int ORDER;
     public static final String ARG_PLAYLIST = "reproductor";
-    public static final String ARG_SONG = "cancion";
+    public static final String ARG_SONG = "posicion";
+    public static final String ARG_ORDERBY = "ordenacion";
+    private DbAdapter mDb;
+    private static SongAdapter adaptador;
+    private static ArrayList<Song> canciones;
+
 
     public PlayerFragment() {
     }
@@ -46,9 +52,49 @@ public class PlayerFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.reproductor, container, false);
+
         getActivity().setTitle("Reproductor");
+        // Si tiene argumentos, es decir, si venimos de haber pulsado una canción de un playlist,
+        // mostramos dichos argumentos en la pantalla.
+        if (getArguments() != null && getArguments().getString(ARG_PLAYLIST) != null
+                && getArguments().getString(ARG_SONG)!=null && getArguments().getString(ARG_ORDERBY)!=null) {
+
+            //Accedemos a la base de datos
+            mDb = new DbAdapter(view.getContext());
+            if(!mDb.isOpen()) mDb.open();
+            //obtenemos las canciones
+            SongFactory sf = new SongFactory(mDb);
+            canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
+            //Aqui cojo la canción que acaba de ser pulsada
+            Song cancionActual = canciones.get(getArguments().getInt(ARG_SONG));
 
 
+            // nombre_playlist tiene el playlist actual
+            TextView nombre_playlist = (TextView) view.findViewById(R.id.texto_playlist);
+
+            // mostramos el playlist actual
+            nombre_playlist.setText("Playlist: "+getArguments().getString(ARG_PLAYLIST));
+
+            // titulo_cancion tiene el titulo de la cancion actual (nombre del archivo)
+            TextView titulo_cancion = (TextView) view.findViewById(R.id.titulo_cancion_reproductor);
+
+            //Le pongo el título
+            titulo_cancion.setText(cancionActual.getTitle());
+
+            // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+            TextView subtitulo_cancion = (TextView) view.findViewById(R.id.subtitulo_cancion_reproductor);
+
+            //Le pongo el numero de reproducciones
+            subtitulo_cancion.setText("Reproducciones: " + cancionActual.getNum_reproductions());
+
+            // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+            TextView duracion = (TextView) view.findViewById(R.id.duracion);
+
+            //Le pongo el numero de reproducciones
+            duracion.setText(cancionActual.getDuration());
+
+            //TODO:FALTAN EL PARAMETRO (ES FAVORITO) Y ACTUALIZAR NUMERO DE REPRODUCTIONES AQUI EN VEZ DE EN LA PARTE DE CEBO. ADEMAS DE REDIMENSIONAR LA IMAGEN. FALTA PROGRAMAR LOS BOTONES SIGUIENTE; PLAY; Y ANTERIOR; Y TAMBIEN LA BARRA DE ESTADO DEL REPRODUCTOR Y LA REPRODUCCION EN SI.
+        }
 
         botonFav = (ImageButton) view.findViewById(R.id.favoritoCancion);
         botonFav.setOnClickListener(new View.OnClickListener() {
@@ -62,18 +108,27 @@ public class PlayerFragment extends Fragment {
         botonListaPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Playlist el que sea",Toast.LENGTH_SHORT).show();
                 //Obtenemos el playlist
                 Log.w("PRUEBA", "Estoy antes del if");
                 if (getArguments() == null || getArguments().getString(ARG_PLAYLIST) == null) {
+                    Toast.makeText(getContext(),"ES NULL",Toast.LENGTH_SHORT).show();
                     PLAYLIST = "None";
                     Fragment f = new PlaylistsFragment();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
                 } else {
                     PLAYLIST = getArguments().getString(ARG_PLAYLIST);
-                    SONG = getArguments().getString(ARG_SONG);
+                    POS = getArguments().getInt(ARG_SONG);
+                    ORDER = getArguments().getInt(ARG_ORDERBY);
 
+
+
+
+
+
+
+                    Toast.makeText(getContext(),"PLAYLIST: "+PLAYLIST+"POSICION: "+POS+"" +
+                            "ORDENACION ",Toast.LENGTH_SHORT).show();
                     Log.w("VAMOS BIEN", "" + PLAYLIST);
                 }
 
