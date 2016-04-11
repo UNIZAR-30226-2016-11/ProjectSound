@@ -170,6 +170,22 @@ public class DbAdapter extends SQLiteRelacional {
     public Cursor getAllPlaylist(){
         return mDb.query(DATABASE_TABLE_PLAYLIST,new String[]{KEY_NOMBRE_PLAYLIST,KEY_NUM_CANCIONES,KEY_DURACION_PLAYLIST},null,null,null,null,KEY_NOMBRE_PLAYLIST);
     }
+
+    //comprueba si una playlist esta en la bd
+    public boolean comprobarPlaylist(String nombre){
+        Cursor c= getAllPlaylist();
+        boolean pertenece  = false;
+        if(c.moveToFirst()){
+            do {
+                String ruta = c.getString(c.getColumnIndex(DbAdapter.KEY_NOMBRE_PLAYLIST));
+                if(ruta.equals(nombre)){
+                    pertenece = true;
+                    return pertenece;
+                }
+            } while(c.moveToNext());
+        }
+        return  pertenece;
+    }
 //TODO NO SE DEBERIA USAR ESTO
     /*
     //devuelve numero de canciones en una playlist

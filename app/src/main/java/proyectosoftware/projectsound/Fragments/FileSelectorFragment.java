@@ -3,6 +3,7 @@ package proyectosoftware.projectsound.Fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -82,6 +83,8 @@ public class FileSelectorFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fileselector_layout, container, false);
         getActivity().setTitle("Añadir canciones");
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_añadir_canciones);
         mDb = new DbAdapter(view.getContext());
         mDb.open();
         final ListView listview = (ListView) view.findViewById(R.id.fileSelector_listView);

@@ -24,9 +24,6 @@ public class PlaylistFactory {
     }
 
     private List<Playlist> extractPlaylist(Cursor mCursor){
-        if(!db.isOpen()){
-            db.open();
-        }
         List<Playlist> lista = new ArrayList<Playlist>();
         List<Playlist> head = new ArrayList<Playlist>();
         if (mCursor.moveToFirst()) {
@@ -37,11 +34,11 @@ public class PlaylistFactory {
                 String numCanciones = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_NUM_CANCIONES));
                 //Creamos y añadimos el objeto
                 if(nombrePlaylist.equals("Todas")){
-                    head.add(0,new Playlist(R.drawable.ic_todas_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
+                    head.add(0,new Playlist(R.drawable.ic_todas_playlist_256x256,nombrePlaylist,numCanciones + " pistas",durationPlaylist + " min."));
                 }else if(nombrePlaylist.equals("Favoritos")){
-                    head.add(head.size(),new Playlist(R.drawable.ic_favs_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
+                    head.add(head.size(),new Playlist(R.drawable.ic_favs_playlist_256x256,nombrePlaylist,numCanciones + " pistas",durationPlaylist + " min."));
                 }else{
-                    lista.add(new Playlist(R.drawable.ic_nueva_playlist_256x256,nombrePlaylist,numCanciones,durationPlaylist));
+                    lista.add(new Playlist(R.drawable.ic_nueva_playlist_256x256,nombrePlaylist,numCanciones + " pistas",durationPlaylist + " min."));
                 }
 
                 } while (mCursor.moveToNext());
@@ -53,6 +50,8 @@ public class PlaylistFactory {
     }
 
     public List<Playlist> getAllPlaylist(){
+        if(!db.isOpen())
+            db.open();
         return extractPlaylist(db.getAllPlaylist());
     }
 
