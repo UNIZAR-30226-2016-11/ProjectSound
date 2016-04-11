@@ -35,7 +35,7 @@ public class PlayerFragment extends Fragment {
     public static final String ARG_LAYOUT = "Layout";
     private static String PLAYLIST;
     private static int POS;
-    private static int ORDER;
+    private static String ORDER;
     public static final String ARG_PLAYLIST = "reproductor";
     public static final String ARG_SONG = "posicion";
     public static final String ARG_ORDERBY = "ordenacion";
@@ -56,14 +56,16 @@ public class PlayerFragment extends Fragment {
         getActivity().setTitle("Reproductor");
         // Si tiene argumentos, es decir, si venimos de haber pulsado una canción de un playlist,
         // mostramos dichos argumentos en la pantalla.
-        if (getArguments() != null && getArguments().getString(ARG_PLAYLIST) != null
-                && getArguments().getString(ARG_SONG)!=null && getArguments().getString(ARG_ORDERBY)!=null) {
+        if (getArguments() != null && getArguments().getString(ARG_PLAYLIST) != null){
+              //  && getArguments().getString(ARG_SONG)!=null && getArguments().getString(ARG_ORDERBY)!=null) {
 
             //Accedemos a la base de datos
             mDb = new DbAdapter(view.getContext());
             if(!mDb.isOpen()) mDb.open();
             //obtenemos las canciones
             SongFactory sf = new SongFactory(mDb);
+            canciones = new ArrayList<Song>();
+            PLAYLIST=getArguments().getString(ARG_PLAYLIST);
             canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
             //Aqui cojo la canción que acaba de ser pulsada
             Song cancionActual = canciones.get(getArguments().getInt(ARG_SONG));
@@ -119,7 +121,7 @@ public class PlayerFragment extends Fragment {
                 } else {
                     PLAYLIST = getArguments().getString(ARG_PLAYLIST);
                     POS = getArguments().getInt(ARG_SONG);
-                    ORDER = getArguments().getInt(ARG_ORDERBY);
+                    ORDER = getArguments().getString(ARG_ORDERBY);
 
 
 
