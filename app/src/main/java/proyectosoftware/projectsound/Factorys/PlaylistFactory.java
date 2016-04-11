@@ -24,9 +24,6 @@ public class PlaylistFactory {
     }
 
     private List<Playlist> extractPlaylist(Cursor mCursor){
-        if(!db.isOpen()){
-            db.open();
-        }
         List<Playlist> lista = new ArrayList<Playlist>();
         List<Playlist> head = new ArrayList<Playlist>();
         if (mCursor.moveToFirst()) {
@@ -53,6 +50,8 @@ public class PlaylistFactory {
     }
 
     public List<Playlist> getAllPlaylist(){
+        if(!db.isOpen())
+            db.open();
         return extractPlaylist(db.getAllPlaylist());
     }
 
