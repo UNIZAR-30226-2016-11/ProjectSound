@@ -41,7 +41,6 @@ public class PlaylistsFragment extends Fragment {
 
     private ListView lista;
     private DbAdapter mdb;
-    private Context contexto = getContext();
     private PlaylistAdapter adaptador;
     private List<Playlist> datos_playlist = new ArrayList<Playlist>();
     private static String selectedPlaylist = null;
@@ -98,7 +97,7 @@ public class PlaylistsFragment extends Fragment {
     private void montarListView(View view){
 
         //Obtener todos los datos sobre las playlist existentes
-        mdb = new DbAdapter(contexto);
+        mdb = new DbAdapter(getContext());
         PlaylistFactory plf = new PlaylistFactory(mdb);
         datos_playlist = plf.getAllPlaylist();
         //Creacion de lista en el listview
