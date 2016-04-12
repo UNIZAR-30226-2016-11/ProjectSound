@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.List;
+
 import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.Fragments.AddToPlayListFragment;
 import proyectosoftware.projectsound.Fragments.FileSelectorFragment;
@@ -61,14 +63,61 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Lista de Fragments por los que he ido pasando durante la
+        // ejecucion de la app
+        List<Fragment> list = fragmentManager.getFragments();
+        // Guardo el ultimo Fragment que he estado antes de pulsar atras
+        Fragment from = list.get(list.size() - 1);
+        // A veces se buguea
+        // list.size devuelve un valor que no corresponde con los elementos
+        // que hay en la lista (abria que mirarlo porque este if es un apaño)
+        if (from == null){
+            boolean encontrado = false;
+            int i = 0;
+            while (!encontrado){
+                from = list.get(i);
+                if(from == null){
+                    encontrado = true;
+                }
+                else {
+                    i++;
+                }
+            }
+            from = list.get(i - 1);
         }
-        //Intent pasoPlaylist = new Intent(this,Add_to_playlistActivity.class);
-        //startActivity(pasoPlaylist);
+        String name = from.toString();
+        // Parsear el nombre del Fragment
+        int ch = name.indexOf('{');
+        name = name.substring(0, ch);
+        switch(name){
+            // Si estaba en la pantalla de Playlists vuelvo a la pantalla
+            // del Reproductor
+            case "PlaylistsFragment":
+                // Vacio la pila de Fragments
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Fragment f = new PlayerFragment();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
+                break;
+            // Si estaba en la pantalla de canciones vuelvo a la pantalla
+            // de Playlists
+            case "SongsFragment":
+                // Vacio la pila de Fragments
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Fragment p = new PlaylistsFragment();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, p).addToBackStack(null).commit();
+                break;
+            // Actua por defecto yendo a la pantalla anterior
+            default:
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    super.onBackPressed();
+                }
+                break;
+        }
+        
     }
 
     @Override
