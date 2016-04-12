@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private static final int FILE_SELECT_CODE = 0;
+    private static boolean end = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,9 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 Fragment f = new PlayerFragment();
                 fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
+                end = false;
                 break;
+
             // Si estaba en la pantalla de canciones vuelvo a la pantalla
             // de Playlists
             case "SongsFragment":
@@ -106,9 +109,24 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 Fragment p = new PlaylistsFragment();
                 fragmentManager.beginTransaction().replace(R.id.content_frame, p).addToBackStack(null).commit();
+                end = false;
                 break;
+            
+            // Caso Reproductor para pulsar dos veces atras
+            // si quiere salir de la aplicacion
+            case "PlayerFragment":
+                if (end){
+                    finish();
+                }
+                else{
+                    Toast.makeText(this, "Pulse de nuevo para salir", Toast.LENGTH_LONG).show();
+                    end = true;
+                }
+                break;
+
             // Actua por defecto yendo a la pantalla anterior
             default:
+                end = false;
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
@@ -117,7 +135,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
-        
+
     }
 
     @Override
