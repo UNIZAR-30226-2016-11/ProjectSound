@@ -24,6 +24,10 @@ public class SQLiteRelacional {
     public static String PLAYLIST_ESPECIFICA = "";
     public static final int DATABASE_VERSION = 2;
     public static final String  KEY_ID="id";
+    public static final String TRIGGER_INSERT_CANCION_PLAYLIST_DURACION="insert_duracion";
+    public static final String  TRIGGER_DELETE_CANCION_PLAYLIST_DURACION="delete_duracion";
+    public static final String TRIGGER_INSERT_CANCION_PLAYLIST_NUMERO="insert_numero";
+    public static final String  TRIGGER_DELETE_CANCION_PLAYLIST_NUMERO="delete_numero";
 
     /**
      * Database creation sql statement
@@ -45,15 +49,31 @@ public class SQLiteRelacional {
     protected static final String INSERT_PLAYLIST_FAVORITOS =
             "insert into " + DATABASE_TABLE_PLAYLIST + " (" + KEY_NOMBRE_PLAYLIST + " , " + KEY_DURACION_PLAYLIST + " , " + KEY_NUM_CANCIONES + ") values ( '" + DEFAULT_PLAYLIST_FAVORITOS + "' , 0 , 0 );";
 
-  /* protected  static final String TRIGGER_DELETE_CANCION =
-            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_CANCION"+"FOR EACH ROW"+
-                    "DELETE FROM PERTENECE WHERE KEY_CANCION_PERTENECE=OLD.KEY_RUTA;"+ "END;";
-    protected  static final String TRIGGER_DELETE_PLAYLIST =
-            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_PLAYLIST"+"FOR EACH ROW"+
-                    "DELETE FROM PERTENECE WHERE KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_RUTA;"+ "END;";
 
-    protected  static final String TRIGGER_DELETE_CANCION_PLAYLIST =
-            "CREATE TRIGGER DELETE" + "BEFORE DELETE ON DATABASE_TABLE_PLAYLIST"+"FOR EACH ROW"+
-                    "DELETE FROM PERTENECE WHERE KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_NOM_PLAYLIST_PERTENCE && KEY_NOM_PLAYLIST_PERTENCE=OLD.KEY_NOM_PLAYLIST_PERTENCE;"+ "END;";*/
+    protected static final String trigger_insert_duracion =  "CREATE TRIGGER " +TRIGGER_INSERT_CANCION_PLAYLIST_DURACION +
+            " BEFORE INSERT ON " + DATABASE_TABLE_PERTENECE + " FOR EACH ROW " + " BEGIN " + " UPDATE "+
+            DATABASE_TABLE_PLAYLIST  + " SET " + KEY_DURACION_PLAYLIST +" = " +KEY_DURACION_PLAYLIST+" +(SELECT " + KEY_DURACION+
+            " FROM " + DATABASE_TABLE_CANCION+  " WHERE " +  KEY_RUTA+ " =NEW." +KEY_CANCION_PERTENECE+ " ) "+
+            " WHERE " +  KEY_NOMBRE_PLAYLIST +" = NEW." +KEY_NOM_PLAYLIST_PERTENCE+ " ; " +" END ";
+
+    protected static final String trigger_delete_duracion =  "CREATE TRIGGER " + TRIGGER_DELETE_CANCION_PLAYLIST_DURACION+
+            " BEFORE INSERT ON " + DATABASE_TABLE_PERTENECE + " FOR EACH ROW " + " BEGIN " + " UPDATE "+
+            DATABASE_TABLE_PLAYLIST  + " SET " + KEY_DURACION_PLAYLIST +" = " +KEY_DURACION_PLAYLIST+" -(SELECT " + KEY_DURACION+
+            " FROM " + DATABASE_TABLE_CANCION+  " WHERE " +  KEY_RUTA+ " =NEW." +KEY_CANCION_PERTENECE+ " ) "+
+            " WHERE " +  KEY_NOMBRE_PLAYLIST +" = NEW." +KEY_NOM_PLAYLIST_PERTENCE+ " ; " +" END ";
+
+    protected static final String trigger_insert_numero = "CREATE TRIGGER "+ TRIGGER_INSERT_CANCION_PLAYLIST_NUMERO+
+            " BEFORE INSERT ON " + DATABASE_CREATE_PERTENECE + " FOR EACH ROW " + " BEGIN " +" UPDATE "+
+            DATABASE_TABLE_PLAYLIST  + " SET "+ KEY_NUM_CANCIONES +" = " + KEY_NUM_CANCIONES+" + 1 "+
+            " WHERE "+  KEY_NOMBRE_PLAYLIST+" =NEW."+KEY_NOM_PLAYLIST_PERTENCE+" ; "+" END ";
+
+    protected static final String trigger_delete_numero = "CREATE TRIGGER "+ TRIGGER_DELETE_CANCION_PLAYLIST_NUMERO+
+            " BEFORE INSERT ON " + DATABASE_CREATE_PERTENECE + " FOR EACH ROW " + " BEGIN " +" UPDATE "+
+            DATABASE_TABLE_PLAYLIST  + " SET "+ KEY_NUM_CANCIONES +" = " + KEY_NUM_CANCIONES+" - 1 "+
+            " WHERE "+  KEY_NOMBRE_PLAYLIST+" =NEW."+KEY_NOM_PLAYLIST_PERTENCE+" ; "+" END ";
+
+
+
+
 }
 
