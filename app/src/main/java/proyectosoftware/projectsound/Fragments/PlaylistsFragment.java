@@ -23,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,26 +203,32 @@ public class PlaylistsFragment extends Fragment {
 
         //Introducir un editText en el dialog, para recoger el nuevo titulo
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.create_playlist_dialog, (ViewGroup) getView(), false);
-        final EditText input = (EditText) viewInflated.findViewById(R.id.dialog_createplaylist);
+        final EditText etxt = (EditText) viewInflated.findViewById(R.id.dialog_createplaylist);
+
         ad.setView(viewInflated);
 
         ad.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,"Añadir", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int id) {
 
+
                 String newTitle = "";
-                newTitle = input.getText().toString();
+                newTitle = etxt.getText().toString().trim();
                 if(!mdb.isOpen()){
                     mdb.open();
                 }
-                //TODO controlar que no intente insertar algo que existe
-                if(!newTitle.equals("")){
+                boolean existe =mdb.comprobarPlaylist(newTitle);
+                //TODO controlar que no intente insertar algo que existe ¡HECHO!, comprobar si se debe restringir mas
+                //TODO COMPROBAR EN MOVIL
+                if(!newTitle.equals("") && !existe){
                     mdb.insertNewPlaylist(newTitle);
                     montarListView(vista);
                     adaptador.notifyDataSetChanged();
+                }else if(existe){
+                    Toast.makeText(getContext(), "La playlist '" + newTitle + "' ya existe.", Toast.LENGTH_SHORT).show();
+                }else if(newTitle.equals("")){
+                    Toast.makeText(getContext(), "Debe introducir un titulo valido.", Toast.LENGTH_SHORT).show();
                 }
-
-                ;//llamada a la creacion de playlist
 
             }
         });
@@ -253,18 +261,21 @@ public class PlaylistsFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
 
                 String newTitle = "";
-                newTitle = input.getText().toString();
+                newTitle = input.getText().toString().trim();
                 if(!mdb.isOpen()){
                     mdb.open();
                 }
-                //TODO controlar que no intente insertar algo que existe
-                if(!newTitle.equals("")){
+                boolean existe = mdb.comprobarPlaylist(newTitle);
+                //TODO controlar que no intente insertar algo que existe HECHO, COMPROBAR EN MOVIL
+                if(!newTitle.equals("") && !existe){
                     mdb.cambiar_nombre_playlist(selectedPlaylist,newTitle);
                     montarListView(vista);
                     adaptador.notifyDataSetChanged();
+                }else if(existe){
+                    Toast.makeText(getContext(), "La playlist '" + newTitle + "' ya existe.", Toast.LENGTH_SHORT).show();
+                }else if(newTitle.equals("")){
+                    Toast.makeText(getContext(), "Debe introducir un titulo valido.", Toast.LENGTH_SHORT).show();
                 }
-
-                ;//llamada a la creacion de playlist
 
             }
         });
