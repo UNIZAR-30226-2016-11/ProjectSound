@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager.beginTransaction().replace(R.id.content_frame, p).addToBackStack(null).commit();
                 end = false;
                 break;
-            
+
             // Caso Reproductor para pulsar dos veces atras
             // si quiere salir de la aplicacion
             case "PlayerFragment":

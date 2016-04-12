@@ -18,8 +18,16 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:layout_gravity="center_horizontal"
         android:src="@mipmap/ic_launcher" />
-
-    <TextView
+<proyectosoftware.projectsound.Tipos.AutoResizeTextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxLines="1"
+    android:layout_gravity="center_horizontal"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="PROJECT SOUND"
+    android:textColor="#FFCC00"
+    android:textSize="35dp" />
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -28,6 +36,6 @@
         android:text="PROJECT SOUND"
         android:textColor="#FFCC00"
         android:textSize="30sp"
-        android:id="@+id/nameApp" />
+        android:id="@+id/nameApp" />-->
 
 </LinearLayout>
