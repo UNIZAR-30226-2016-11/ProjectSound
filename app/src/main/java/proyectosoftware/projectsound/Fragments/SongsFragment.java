@@ -75,11 +75,9 @@ public class SongsFragment extends Fragment {
         //Generamos la vista
         View view = inflater.inflate(R.layout.song_layout, container, false);
         //Obtemos la playlist
-        if (getArguments() == null) {
-            PLAYLIST = "None";
+        PLAYLIST = getArguments() != null ? getArguments().getString(ARG_PLAYLIST) : "None";
+        if (PLAYLIST.equals("None")) {
             Log.w("SONGFRAGMENT", "WARNING: null argument ARG_PLAYLIST");
-        } else {
-            PLAYLIST = getArguments().getString(ARG_PLAYLIST);
         }
         //Machaca la posición en el navigationDrawer por si hemos pulsado atrás desde otra pantalla
         //y tenía otro valor
@@ -130,19 +128,16 @@ public class SongsFragment extends Fragment {
         selectedSong=(canciones.get((int)info.id).getPath());
         //Le ponemos el titulo
         menu.setHeaderTitle(getContext().getString(R.string.options));
-        //Obtenemos el nombre del playlist en el que se está creando
-        String playList = getArguments().getString(ARG_PLAYLIST);
         //Si no es ni Todas ni Favoritos
-        if (!playList.equals(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS)
-                && !playList.equals(DbAdapter.DEFAULT_PLAYLIST_TODAS)) {
+        if (!PLAYLIST.equals(DbAdapter.DEFAULT_PLAYLIST_FAVORITOS)
+                && !PLAYLIST.equals(DbAdapter.DEFAULT_PLAYLIST_TODAS)) {
             //Ponemos la opción de Eliminar del PlayList
             menu.add(Menu.NONE, MENU_CONTEXT_DELETE_FROM_PLAYLIST, Menu.NONE,
-                    getContext().getString(R.string.delete_from_playlist) +
-                            getArguments().get(ARG_PLAYLIST));
+                    getContext().getString(R.string.delete_from_playlist) +PLAYLIST);
             //Y la opción de Editar PlayList
             menu.add(Menu.NONE, MENU_CONTEXT_EDIT_PLAYLIST, Menu.NONE,
                     getContext().getString(R.string.edit_playlist)
-                            + getArguments().get(ARG_PLAYLIST));
+                            + PLAYLIST);
         }
         //Entrada generica a todas las PlayLists
         menu.add(Menu.NONE, MENU_CONTEXT_DELETE_SONG, Menu.NONE,
