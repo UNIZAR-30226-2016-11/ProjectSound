@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         DbAdapter db = new DbAdapter(getApplicationContext());
         db.open();
-        db.insertNewPlaylist("Testeo");
         //Hacemos pantalla de inicio el reproductor
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, new PlayerFragment()).commit();
