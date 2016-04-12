@@ -42,8 +42,14 @@ public class Song {
     public int getDuration_seconds(){
         return duration_seconds;
     }
-    public String getDuration(){
-        return duration_seconds/60+":"+duration_seconds%60;
+    public String getDuration() {
+        int min = duration_seconds / 60;
+        int sec = duration_seconds % 60;
+        if (sec < 10) {
+            return min + ":0" + sec;
+        } else {
+            return min + ":" + sec;
+        }
     }
     public String getNum_reproductions(){
         return ""+num_reproductions;
