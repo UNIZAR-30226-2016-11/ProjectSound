@@ -212,21 +212,21 @@ public class PlaylistsFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
 
 
-                String newTitle = "";
-                newTitle = etxt.getText().toString().trim();
+                String nuevoTitulo = "";
+                nuevoTitulo = etxt.getText().toString().trim();
                 if(!mdb.isOpen()){
                     mdb.open();
                 }
-                boolean existe =mdb.comprobarPlaylist(newTitle);
+                boolean existe =mdb.comprobarPlaylist(nuevoTitulo);
                 //TODO controlar que no intente insertar algo que existe ¡HECHO!, comprobar si se debe restringir mas
                 //TODO COMPROBAR EN MOVIL
-                if(!newTitle.equals("") && !existe){
-                    mdb.insertNewPlaylist(newTitle);
+                if(!nuevoTitulo.equals("") && !existe){
+                    mdb.insertNewPlaylist(nuevoTitulo);
                     montarListView(vista);
                     adaptador.notifyDataSetChanged();
                 }else if(existe){
-                    Toast.makeText(getContext(), "La playlist '" + newTitle + "' ya existe.", Toast.LENGTH_SHORT).show();
-                }else if(newTitle.equals("")){
+                    Toast.makeText(getContext(), "La playlist '" + nuevoTitulo + "' ya existe.", Toast.LENGTH_SHORT).show();
+                }else if(nuevoTitulo.equals("")){
                     Toast.makeText(getContext(), "Debe introducir un titulo valido.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -260,20 +260,20 @@ public class PlaylistsFragment extends Fragment {
 
             public void onClick(DialogInterface dialog, int id) {
 
-                String newTitle = "";
-                newTitle = input.getText().toString().trim();
+                String nuevoTitulo = "";
+                nuevoTitulo = input.getText().toString().trim();
                 if(!mdb.isOpen()){
                     mdb.open();
                 }
-                boolean existe = mdb.comprobarPlaylist(newTitle);
+                boolean existe = mdb.comprobarPlaylist(nuevoTitulo);
                 //TODO controlar que no intente insertar algo que existe HECHO, COMPROBAR EN MOVIL
-                if(!newTitle.equals("") && !existe){
-                    mdb.cambiar_nombre_playlist(selectedPlaylist,newTitle);
+                if(!nuevoTitulo.equals("") && !existe){
+                    mdb.cambiar_nombre_playlist(selectedPlaylist,nuevoTitulo);
                     montarListView(vista);
                     adaptador.notifyDataSetChanged();
                 }else if(existe){
-                    Toast.makeText(getContext(), "La playlist '" + newTitle + "' ya existe.", Toast.LENGTH_SHORT).show();
-                }else if(newTitle.equals("")){
+                    Toast.makeText(getContext(), "La playlist '" + nuevoTitulo + "' ya existe.", Toast.LENGTH_SHORT).show();
+                }else if(nuevoTitulo.equals("")){
                     Toast.makeText(getContext(), "Debe introducir un titulo valido.", Toast.LENGTH_SHORT).show();
                 }
 

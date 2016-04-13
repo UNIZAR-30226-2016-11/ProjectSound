@@ -30,7 +30,8 @@ public class PlaylistFactory {
             do {
                 //Para cada fila de la base de datos, obtenemos todos los campos
                 String nombrePlaylist = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_NOMBRE_PLAYLIST));
-                String durationPlaylist = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_DURACION_PLAYLIST));
+                int durationPlaylist = mCursor.getInt(mCursor.getColumnIndex(DbAdapter.KEY_DURACION_PLAYLIST));
+                durationPlaylist = durationPlaylist/60;
                 String numCanciones = mCursor.getString(mCursor.getColumnIndex(DbAdapter.KEY_NUM_CANCIONES));
                 //Creamos y añadimos el objeto
                 if(nombrePlaylist.equals("Todas")){

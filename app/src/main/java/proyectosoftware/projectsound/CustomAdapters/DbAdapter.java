@@ -88,8 +88,8 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(trigger_delete_cancion_numero);
             db.execSQL(trigger_insert_cancion_duracion);
             db.execSQL(trigger_delete_cancion_duracion);
-            db.execSQL(trigger_fav_numero);
-            db.execSQL(trigger_fav_duracion);
+            //db.execSQL(trigger_fav_numero);
+            //db.execSQL(trigger_fav_duracion);
             Log.d("SQLite", DATABASE_CREATE_CANCION);
             Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_PERTENECE);

@@ -7,6 +7,7 @@
     <ImageView
         android:id="@+id/imgeView_lista_icono"
         android:layout_width="60dp"
+        android:layout_marginLeft="8dp"
         android:layout_height="60dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
