@@ -57,6 +57,8 @@ public class PlaylistsFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_playlist, container, false);
         getActivity().setTitle("Playlists");
 
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_playlists);
 
         //Referencia al boton para anadir nuevas playlist
         FloatingActionButton btn_anadir = (FloatingActionButton) view.findViewById(R.id.btn_anadir_playlist);
