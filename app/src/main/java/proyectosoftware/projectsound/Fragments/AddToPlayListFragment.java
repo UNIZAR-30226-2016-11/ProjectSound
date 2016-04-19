@@ -3,6 +3,7 @@ package proyectosoftware.projectsound.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,14 +56,22 @@ public class AddToPlayListFragment extends Fragment {
         final List<Song> cancionesPlaylist = factoriaCanciones.getAllFromPlaylist(playlist);
         TextView nombreLista = (TextView) view.findViewById(R.id.nombreLista);
         nombreLista.setText(playlist);
-        //LLENANDO LOS LISTVIEWS
+        final List<String> cancionesPlaylist_titulos = new ArrayList<>();
+        for(int i=0;i<cancionesPlaylist.size();i++) cancionesPlaylist_titulos.add(cancionesPlaylist.get(i).getTitle());
         final List<String> todasCanciones_titulos = new ArrayList<>();//Lista con los titulos
         for(int i=0;i<todasCanciones.size();i++) todasCanciones_titulos.add(todasCanciones.get(i).getTitle());
+        //QUITANDO CANCIONES QUE YA ESTAN EN EL PLAYLIST
+        for(int i=0;i<todasCanciones_titulos.size();i++){
+            for(int j=0;j<cancionesPlaylist_titulos.size();j++){
+                if(todasCanciones_titulos.get(i).equals(cancionesPlaylist_titulos.get(j))){
+                    todasCanciones_titulos.remove(i);
+                }
+            }
+        }
+        //LLENANDO LOS LISTVIEWS
         ListView allSongs = (ListView) view.findViewById(R.id.cancionesSistema); //LisView izquierdo
         final ArrayAdapter<String> adaptador = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, todasCanciones_titulos);
         allSongs.setAdapter(adaptador);
-        final List<String> cancionesPlaylist_titulos = new ArrayList<>();
-        for(int i=0;i<cancionesPlaylist.size();i++) cancionesPlaylist_titulos.add(cancionesPlaylist.get(i).getTitle());
         ListView playlistSongs = (ListView) view.findViewById(R.id.playlist); //LisView derecho
         final ArrayAdapter<String> lista = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, cancionesPlaylist_titulos);
         playlistSongs.setAdapter(lista);
