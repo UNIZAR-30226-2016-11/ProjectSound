@@ -99,7 +99,12 @@ public class DbAdapter extends SQLiteRelacional {
             Log.d("SQLite",trigger_delete_numero);
             Log.d("SQLite",trigger_insert_duracion);
             Log.d("SQLite",trigger_insert_numero);
-
+            Log.d("SQLite",trigger_insert_cancion_numero);
+            Log.d("SQLite",trigger_delete_cancion_numero);
+            Log.d("SQLite",trigger_insert_cancion_duracion);
+            Log.d("SQLite",trigger_delete_cancion_duracion);
+            Log.d("SQLite",trigger_fav_numero);
+            Log.d("SQLite",trigger_fav_duracion);
 
             Log.d("SQLite", "DATABASES CREATED");
         }
@@ -380,11 +385,11 @@ public class DbAdapter extends SQLiteRelacional {
 
         c.moveToFirst();
         int reproducciones = c.getInt(c.getColumnIndex(DbAdapter.KEY_REPRODUCCIONES));
-
+        Log.d("reproducciones:",""+reproducciones);
+        Log.d("ruta:",ruta);
         ContentValues args = new ContentValues();
         reproducciones++;
         args.put(KEY_REPRODUCCIONES, reproducciones);
-        args.put(KEY_RUTA,ruta);
         mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{ruta});
 
 
