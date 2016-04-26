@@ -88,8 +88,8 @@ public class DbAdapter extends SQLiteRelacional {
             db.execSQL(trigger_delete_cancion_numero);
             db.execSQL(trigger_insert_cancion_duracion);
             db.execSQL(trigger_delete_cancion_duracion);
-            //db.execSQL(trigger_fav_numero);
-            //db.execSQL(trigger_fav_duracion);
+            db.execSQL(trigger_fav_numero);
+            db.execSQL(trigger_fav_duracion);
             Log.d("SQLite", DATABASE_CREATE_CANCION);
             Log.d("SQLite", DATABASE_CREATE_PLAYLIST);
             Log.d("SQLite", DATABASE_CREATE_PERTENECE);
@@ -384,6 +384,7 @@ public class DbAdapter extends SQLiteRelacional {
         ContentValues args = new ContentValues();
         reproducciones++;
         args.put(KEY_REPRODUCCIONES, reproducciones);
+        args.put(KEY_RUTA,ruta);
         mDb.update(DATABASE_TABLE_CANCION, args, KEY_RUTA + " =?", new String[]{ruta});
 
 
