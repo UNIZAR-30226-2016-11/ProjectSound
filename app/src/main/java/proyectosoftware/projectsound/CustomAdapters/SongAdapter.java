@@ -110,7 +110,8 @@ public class SongAdapter extends ArrayAdapter<Song> {
                 DbAdapter db = new DbAdapter(getContext());
                 if(!db.isOpen())
                     db.open();
-                db.incrementarReproduccionCancion(songArrayList.get(position).getPath());
+                //AHORA EL INCREMENTO DE LAS REPRODUCCIONES SE REALIZA EN PLAYERFRAGMENT
+                //db.incrementarReproduccionCancion(songArrayList.get(position).getPath());
                 PlayerFragment f = new PlayerFragment();
                 Bundle args = new Bundle();
                 args.putString(PlayerFragment.ARG_PLAYLIST,playlist);
