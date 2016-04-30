@@ -137,7 +137,7 @@ public class PlayerFragment extends Fragment {
 //TODO: DESCOMENTAR DESDE AQUI
 
             //Cogemos la ruta de la cancion de la BD.
-           /* String ruta = cancionActual.getPath();
+            /*String ruta = cancionActual.getPath();
 
             try {
                 //ponemos el reproductor en estado de preparado.
@@ -164,12 +164,11 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if(mediaPlayer.isPlaying()) {
-                        play_button.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                        mediaPlayer.stop();
-
+                        play_button.setImageResource(R.drawable.ic_pause_black_24dp);
+                        mediaPlayer.pause();
                     }
                     else if(!mediaPlayer.isPlaying()){
-                        play_button.setImageResource(R.drawable.ic_pause_black_24dp);
+                        play_button.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                         mediaPlayer.start();
                     }
                 }
@@ -208,6 +207,9 @@ public class PlayerFragment extends Fragment {
 
 
 //TODO: COMENTAR DESDE AQUI
+                    if(mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
                     //Probatina a ver si funciona
                     mediaPlayer = mediaPlayer.create(getActivity(),R.raw.deorro_five_more_hours);
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
@@ -255,6 +257,9 @@ public class PlayerFragment extends Fragment {
 
 
 //TODO: COMENTAR DESDE AQUI
+                    if(mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
                     //Probatina a ver si funciona
                     mediaPlayer = mediaPlayer.create(getActivity(),R.raw.dirty_palm_make_it_bounce);
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
