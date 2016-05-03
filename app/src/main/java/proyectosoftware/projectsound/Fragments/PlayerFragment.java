@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import java.io.IOException;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.SongAdapter;
 import proyectosoftware.projectsound.Factorys.SongFactory;
 import proyectosoftware.projectsound.R;
+import proyectosoftware.projectsound.Tipos.Playlist;
 import proyectosoftware.projectsound.Tipos.Song;
 
 /**
@@ -128,16 +131,13 @@ public class PlayerFragment extends Fragment {
             });
 
 
-            //TODO: FALTA ACTUALIZAR NUMERO DE REPRODUCCIONES AQUI EN VEZ DE EN LA PARTE DE CEBO.
             //TODO: FALTA TAMBIEN LA BARRA DE ESTADO DEL REPRODUCTOR Y LA REPRODUCCION EN SI.
 
 
             // TRATAMIENTO DE LA REPRODUCCION
 
-//TODO: DESCOMENTAR DESDE AQUI
-
             //Cogemos la ruta de la cancion de la BD.
-            /*String ruta = cancionActual.getPath();
+            String ruta = cancionActual.getPath();
 
             try {
                 //ponemos el reproductor en estado de preparado.
@@ -145,18 +145,17 @@ public class PlayerFragment extends Fragment {
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
+            }
 
             //En mediaPlayer tengo el reproductor de la cancion "JAH_JAH" (carpeta RAW).
 
 //TODO: COMENTAR DESDE AQUI
             //Probatina a ver si funciona
-            mediaPlayer = mediaPlayer.create(getActivity(),R.raw.jah_jah);
+            /*mediaPlayer = mediaPlayer.create(getActivity(),R.raw.jah_jah);*/
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
             //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
-            mediaPlayer.setLooping(true);
+            //mediaPlayer.setLooping(true);
 
             //Botón de play/pause
             play_button = (ImageButton) view.findViewById(R.id.play_button);
@@ -164,11 +163,11 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if(mediaPlayer.isPlaying()) {
-                        play_button.setImageResource(R.drawable.ic_pause_black_24dp);
+                        play_button.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                         mediaPlayer.pause();
                     }
                     else if(!mediaPlayer.isPlaying()){
-                        play_button.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                        play_button.setImageResource(R.drawable.ic_pause_black_24dp);
                         mediaPlayer.start();
                     }
                 }
@@ -183,8 +182,10 @@ public class PlayerFragment extends Fragment {
 
 //TODO: DESCOMENTAR DESDE AQUI
                     //Coger la cancion anterior del playlist de la BD
-
-                   /* int indiceAnteriorCancion = 0;
+                    if(mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    int indiceAnteriorCancion = 0;
                     int indiceCancionActual = getArguments().getInt(ARG_SONG);
                     if (indiceCancionActual == 0){
                         indiceAnteriorCancion = canciones.size()-1;
@@ -202,21 +203,21 @@ public class PlayerFragment extends Fragment {
                         mediaPlayer.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }*/
+                    }
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
 
 //TODO: COMENTAR DESDE AQUI
-                    if(mediaPlayer.isPlaying()) {
+                   /* if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
                     //Probatina a ver si funciona
-                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.deorro_five_more_hours);
+                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.deorro_five_more_hours);*/
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
                     //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
-                    mediaPlayer.setLooping(true);
-
+                    //mediaPlayer.setLooping(true);
+                    play_button.setImageResource(R.drawable.ic_pause_black_24dp);
                     //Reproducir la cancion.
                     mediaPlayer.start();
                 }
@@ -233,8 +234,11 @@ public class PlayerFragment extends Fragment {
                     //Coger la cancion siguiente del playlist de la BD
 
 //TODO: DESCOMENTAR DESDE AQUI
+                    if(mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
                     //Coger la cancion anterior del playlist de la BD
-                    /*int indiceCancionActual = getArguments().getInt(ARG_SONG);
+                    int indiceCancionActual = getArguments().getInt(ARG_SONG);
                     int indiceSiguienteCancion = 0;
                     if (indiceCancionActual == canciones.size()-1){
                         indiceSiguienteCancion = 0;
@@ -252,22 +256,23 @@ public class PlayerFragment extends Fragment {
                         mediaPlayer.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }*/
+                    }
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
 
 //TODO: COMENTAR DESDE AQUI
-                    if(mediaPlayer.isPlaying()) {
+                    /*if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
                     //Probatina a ver si funciona
-                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.dirty_palm_make_it_bounce);
+                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.dirty_palm_make_it_bounce);*/
 //TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
 
                     //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
-                    mediaPlayer.setLooping(true);
+                    //mediaPlayer.setLooping(true);
 
+                    play_button.setImageResource(R.drawable.ic_pause_black_24dp);
                     //Reproducir la cancion.
                     mediaPlayer.start();
                 }
@@ -279,11 +284,11 @@ public class PlayerFragment extends Fragment {
         botonListaPlaylist = (ImageButton) view.findViewById(R.id.botonListaPlaylist);
         botonListaPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 //Obtenemos el playlist
                 Log.w("PRUEBA", "Estoy antes del if");
                 if (getArguments() == null || getArguments().getString(ARG_PLAYLIST) == null) {
-                    Toast.makeText(getContext(),"ES NULL",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(),"ES NULL",Toast.LENGTH_SHORT).show();
                     PLAYLIST = "None";
                     Fragment f = new PlaylistsFragment();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -294,13 +299,18 @@ public class PlayerFragment extends Fragment {
                     ORDER = getArguments().getString(ARG_ORDERBY);
 
 
+                    Bundle args = new Bundle();
+                    args.putString(SongsFragment.ARG_PLAYLIST, PLAYLIST);
+                    SongsFragment f = new SongsFragment();
+                    f.setArguments(args);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
 
 
 
 
 
-                    Toast.makeText(getContext(),"PLAYLIST: "+PLAYLIST+"POSICION: "+POS+"" +
-                            "ORDENACION ",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(),"PLAYLIST: "+PLAYLIST+"POSICION: "+POS+"" +"ORDENACION ",Toast.LENGTH_SHORT).show();
                     Log.w("VAMOS BIEN", "" + PLAYLIST);
                 }
 

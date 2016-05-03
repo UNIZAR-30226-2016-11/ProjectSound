@@ -105,8 +105,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
             @Override
             public void onClick(View v) {
                 //TODO enviar canción al reproductor
-                Toast.makeText(getContext(), "Reproducción no disponible de " +
-                        songArrayList.get(position).getTitle(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Reproducción no disponible de " + songArrayList.get(position).getTitle(), Toast.LENGTH_LONG).show();
                 DbAdapter db = new DbAdapter(getContext());
                 if(!db.isOpen())
                     db.open();

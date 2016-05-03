@@ -19,7 +19,7 @@
             android:background="#CCCCCC"
             android:textSize="16dp"
             android:textColor="#000000"
-            android:text="Playlist:Todas "/>
+            android:text="Playlist: "/>
     </RelativeLayout>
 
     <RelativeLayout
