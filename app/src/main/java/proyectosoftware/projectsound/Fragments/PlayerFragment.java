@@ -45,8 +45,10 @@ public class PlayerFragment extends Fragment {
 
     MediaPlayer mediaPlayer = new MediaPlayer();
     ImageButton play_button;  // Botón play
-    ImageButton anteriorCancion; // Botón atras
-    ImageButton siguienteCancion; // Botón adelante
+    ImageButton botonAnteriorCancion; // Botón atras
+    boolean anterior = false;
+    ImageButton botonSiguienteCancion; // Botón adelante
+    boolean siguiente = false;
     private int state = 1;
     private final int playing = 1;
     private final int Pausing = 2;
@@ -65,7 +67,6 @@ public class PlayerFragment extends Fragment {
         // Si tiene argumentos, es decir, si venimos de haber pulsado una canción de un playlist,
         // mostramos dichos argumentos en la pantalla.
         if (getArguments() != null && getArguments().getString(ARG_PLAYLIST) != null){
-              //  && getArguments().getString(ARG_SONG)!=null && getArguments().getString(ARG_ORDERBY)!=null) {
 
             //Accedemos a la base de datos
             mDb = new DbAdapter(view.getContext());
@@ -138,8 +139,10 @@ public class PlayerFragment extends Fragment {
 
             //Cogemos la ruta de la cancion de la BD.
             String ruta = cancionActual.getPath();
+            Log.w("rutaActual ", "rutaActual " + ruta);
 
             try {
+                mediaPlayer.reset();
                 //ponemos el reproductor en estado de preparado.
                 mediaPlayer.setDataSource(ruta);
                 mediaPlayer.prepare();
@@ -147,17 +150,11 @@ public class PlayerFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            //En mediaPlayer tengo el reproductor de la cancion "JAH_JAH" (carpeta RAW).
 
-//TODO: COMENTAR DESDE AQUI
-            //Probatina a ver si funciona
-            /*mediaPlayer = mediaPlayer.create(getActivity(),R.raw.jah_jah);*/
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
+            //Cuidado con este método que igual hace que no se pare la cancion nunca
+            mediaPlayer.setLooping(true);
 
-            //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
-            //mediaPlayer.setLooping(true);
-
-            //Botón de play/pause
+            //TODO: Botón de play/pause
             play_button = (ImageButton) view.findViewById(R.id.play_button);
             play_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,49 +170,56 @@ public class PlayerFragment extends Fragment {
                 }
             });
 
+            int indiceAnteriorCancion = 0;
+            int indiceCancionActual = getArguments().getInt(ARG_SONG);
+            if (indiceCancionActual == 0){
+                indiceAnteriorCancion = canciones.size()-1;
+            }
+            else{
+                indiceAnteriorCancion = indiceCancionActual-1;
+            }
+            Song anteriorCancion = canciones.get(indiceAnteriorCancion);
+            final String rutaAnteriorCancion  = anteriorCancion.getPath();
 
-            // Botón para volver a la canción anterior
-            anteriorCancion = (ImageButton) view.findViewById(R.id.anteriorCancion);
-            anteriorCancion.setOnClickListener(new View.OnClickListener() {
+
+            //TODO: ESTO NO FUNCIONA
+            if (anterior){
+                //Le pongo el título
+                titulo_cancion.setText(anteriorCancion.getTitle());
+
+                //Le pongo el numero de reproducciones
+                subtitulo_cancion.setText("Reproducciones: " + anteriorCancion.getNum_reproductions());
+
+                //Le pongo el numero de reproducciones
+                duracion.setText(anteriorCancion.getDuration());
+            }
+
+
+
+            //TODO: Botón para volver a la canción anterior
+            botonAnteriorCancion = (ImageButton) view.findViewById(R.id.anteriorCancion);
+            botonAnteriorCancion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-//TODO: DESCOMENTAR DESDE AQUI
+                    anterior = true;
+
                     //Coger la cancion anterior del playlist de la BD
                     if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
-                    int indiceAnteriorCancion = 0;
-                    int indiceCancionActual = getArguments().getInt(ARG_SONG);
-                    if (indiceCancionActual == 0){
-                        indiceAnteriorCancion = canciones.size()-1;
-                    }
-                    else{
-                        indiceAnteriorCancion = indiceCancionActual-1;
-                    }
-                    Song anteriorCancion = canciones.get(indiceAnteriorCancion);
-                    String rutaAnteriorCancion  = anteriorCancion.getPath();
                     //incremento en 1 la reproducción de la cancion.
                     mDb.incrementarReproduccionCancion(rutaAnteriorCancion);
                     try {
+                        mediaPlayer.reset();
                         //Preparamos la cancion anterior como reproducible
                         mediaPlayer.setDataSource(rutaAnteriorCancion);
                         mediaPlayer.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
-
-//TODO: COMENTAR DESDE AQUI
-                   /* if(mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    //Probatina a ver si funciona
-                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.deorro_five_more_hours);*/
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
-
-                    //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
+                    //Cuidado con este método que igual hace que no se pare la cancion nunca
                     //mediaPlayer.setLooping(true);
                     play_button.setImageResource(R.drawable.ic_pause_black_24dp);
                     //Reproducir la cancion.
@@ -225,51 +229,60 @@ public class PlayerFragment extends Fragment {
 
 
 
+            //Coger la cancion anterior del playlist de la BD
+            indiceCancionActual = getArguments().getInt(ARG_SONG);
+            Log.w("INDICE ", "INDICE " + indiceCancionActual);
+            int indiceSiguienteCancion = 0;
+            if (indiceCancionActual == canciones.size()-1){
+                indiceSiguienteCancion = 0;
+            }
+            else{
+                indiceSiguienteCancion = indiceCancionActual+1;
+            }
+            Song siguienteCancion = canciones.get(indiceSiguienteCancion);
+            Log.w("siguienteCancion ", "siguienteCancion " + siguienteCancion.getTitle());
 
-            //Boton para reproducir a la siguiente cancion
-            siguienteCancion = (ImageButton) view.findViewById(R.id.siguienteCancion);
-            siguienteCancion.setOnClickListener(new View.OnClickListener() {
+            final String rutaSiguienteCancion  = siguienteCancion.getPath();
+            Log.w("rutaSiguienteCancion ", "rutaSiguienteCancion " + rutaSiguienteCancion);
+
+
+
+            //TODO: ESTO NO FUNCIONA
+            if (siguiente){
+                //Le pongo el título
+                titulo_cancion.setText(siguienteCancion.getTitle());
+
+                //Le pongo el numero de reproducciones
+                subtitulo_cancion.setText("Reproducciones: " + siguienteCancion.getNum_reproductions());
+
+                //Le pongo el numero de reproducciones
+                duracion.setText(siguienteCancion.getDuration());
+            }
+
+            //TODO: Boton para reproducir a la siguiente cancion
+            botonSiguienteCancion = (ImageButton) view.findViewById(R.id.siguienteCancion);
+            botonSiguienteCancion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Coger la cancion siguiente del playlist de la BD
 
-//TODO: DESCOMENTAR DESDE AQUI
+                    siguiente = true;
+
                     if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
-                    //Coger la cancion anterior del playlist de la BD
-                    int indiceCancionActual = getArguments().getInt(ARG_SONG);
-                    int indiceSiguienteCancion = 0;
-                    if (indiceCancionActual == canciones.size()-1){
-                        indiceSiguienteCancion = 0;
-                    }
-                    else{
-                        indiceSiguienteCancion = indiceCancionActual+1;
-                    }
-                    Song siguienteCancion = canciones.get(indiceSiguienteCancion);
-                    String rutaSiguienteCancion  = siguienteCancion.getPath();
+
                     //incremento en 1 la reproducción de la cancion.
                     mDb.incrementarReproduccionCancion(rutaSiguienteCancion);
                     try {
+                        mediaPlayer.reset();
                         //Preparamos la cancion anterior como reproducible
                         mediaPlayer.setDataSource(rutaSiguienteCancion);
                         mediaPlayer.prepare();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
 
-
-//TODO: COMENTAR DESDE AQUI
-                    /*if(mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    //Probatina a ver si funciona
-                    mediaPlayer = mediaPlayer.create(getActivity(),R.raw.dirty_palm_make_it_bounce);*/
-//TODO: HASTA AQUI PARA QUE FUNCIONE CON CANCIONES DE LA BASE DE DATOS.
-
-
-                    //TODO: Cuidado con este método que igual hace que no se pare la cancion nunca
+                    //Cuidado con este método que igual hace que no se pare la cancion nunca
                     //mediaPlayer.setLooping(true);
 
                     play_button.setImageResource(R.drawable.ic_pause_black_24dp);
