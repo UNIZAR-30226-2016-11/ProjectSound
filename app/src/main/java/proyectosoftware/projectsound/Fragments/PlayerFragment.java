@@ -29,8 +29,6 @@ import proyectosoftware.projectsound.Tipos.Song;
  */
 public class PlayerFragment extends Fragment {
 
-    ImageButton botonFav;
-    ImageButton botonListaPlaylist;
 
     public static final String ARG_LAYOUT = "Layout";
     private static String PLAYLIST;
@@ -46,13 +44,14 @@ public class PlayerFragment extends Fragment {
     MediaPlayer mediaPlayer = new MediaPlayer();
     ImageButton play_button;  // Botón play
     ImageButton botonAnteriorCancion; // Botón atras
-    boolean anterior = false;
     ImageButton botonSiguienteCancion; // Botón adelante
-    boolean siguiente = false;
     private int state = 1;
     private final int playing = 1;
     private final int Pausing = 2;
 
+    private TextView titulo_cancion;
+    private TextView subtitulo_cancion;
+    private TextView duracion;
 
     public PlayerFragment() {
     }
@@ -75,7 +74,19 @@ public class PlayerFragment extends Fragment {
             SongFactory sf = new SongFactory(mDb);
             canciones = new ArrayList<Song>();
             PLAYLIST=getArguments().getString(ARG_PLAYLIST);
+            ORDER=getArguments().getString(ARG_ORDERBY);
+
             canciones.addAll(sf.getAllFromPlaylist(PLAYLIST));
+            if (ARG_ORDERBY == "titulo"){
+                sf.orderByTitle(canciones);
+            }
+            else if (ARG_ORDERBY == "duracion"){
+                sf.orderByDuration(canciones);
+            }
+            else if (ARG_ORDERBY == "reproducciones"){
+                sf.orderByReproductions(canciones);
+            }
+
 
             //Aqui cojo la canción que acaba de ser pulsada
             final Song cancionActual = canciones.get(getArguments().getInt(ARG_SONG));
@@ -90,19 +101,19 @@ public class PlayerFragment extends Fragment {
             nombre_playlist.setText("Playlist: "+getArguments().getString(ARG_PLAYLIST));
 
             // titulo_cancion tiene el titulo de la cancion actual (nombre del archivo)
-            TextView titulo_cancion = (TextView) view.findViewById(R.id.titulo_cancion_reproductor);
+            titulo_cancion = (TextView) view.findViewById(R.id.titulo_cancion_reproductor);
 
             //Le pongo el título
             titulo_cancion.setText(cancionActual.getTitle());
 
             // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
-            TextView subtitulo_cancion = (TextView) view.findViewById(R.id.subtitulo_cancion_reproductor);
+            subtitulo_cancion = (TextView) view.findViewById(R.id.subtitulo_cancion_reproductor);
 
             //Le pongo el numero de reproducciones
             subtitulo_cancion.setText("Reproducciones: " + cancionActual.getNum_reproductions());
 
             // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
-            TextView duracion = (TextView) view.findViewById(R.id.duracion);
+            duracion = (TextView) view.findViewById(R.id.duracion);
 
             //Le pongo el numero de reproducciones
             duracion.setText(cancionActual.getDuration());
@@ -170,29 +181,7 @@ public class PlayerFragment extends Fragment {
                 }
             });
 
-            int indiceAnteriorCancion = 0;
-            int indiceCancionActual = getArguments().getInt(ARG_SONG);
-            if (indiceCancionActual == 0){
-                indiceAnteriorCancion = canciones.size()-1;
-            }
-            else{
-                indiceAnteriorCancion = indiceCancionActual-1;
-            }
-            Song anteriorCancion = canciones.get(indiceAnteriorCancion);
-            final String rutaAnteriorCancion  = anteriorCancion.getPath();
 
-
-            //TODO: ESTO NO FUNCIONA
-            if (anterior){
-                //Le pongo el título
-                titulo_cancion.setText(anteriorCancion.getTitle());
-
-                //Le pongo el numero de reproducciones
-                subtitulo_cancion.setText("Reproducciones: " + anteriorCancion.getNum_reproductions());
-
-                //Le pongo el numero de reproducciones
-                duracion.setText(anteriorCancion.getDuration());
-            }
 
 
 
@@ -202,14 +191,65 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    anterior = true;
+                    int indiceAnteriorCancion = 0;
+                    int indiceCancionActual = getArguments().getInt(ARG_SONG);
+                    if (indiceCancionActual == 0){
+                        indiceAnteriorCancion = canciones.size()-1;
+                    }
+                    else{
+                        indiceAnteriorCancion = indiceCancionActual-1;
+                    }
+                    final Song anteriorCancion = canciones.get(indiceAnteriorCancion);
+                    final String rutaAnteriorCancion  = anteriorCancion.getPath();
+                    if(!mDb.isOpen()) mDb.open();
+                    //incremento en 1 la reproducción de la cancion.
+                    mDb.incrementarReproduccionCancion(rutaAnteriorCancion);
+
+                    // titulo_cancion tiene el titulo de la cancion actual (nombre del archivo)
+                    titulo_cancion = (TextView) PlayerFragment.this.getView().findViewById(R.id.titulo_cancion_reproductor);
+
+                    //Le pongo el título
+                    titulo_cancion.setText(anteriorCancion.getTitle());
+
+                    // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+                    subtitulo_cancion = (TextView)  PlayerFragment.this.getView().findViewById(R.id.subtitulo_cancion_reproductor);
+
+                    //Le pongo el numero de reproducciones
+                    subtitulo_cancion.setText("Reproducciones: " + anteriorCancion.getNum_reproductions());
+
+                    // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+                    duracion = (TextView) PlayerFragment.this.getView().findViewById(R.id.duracion);
+
+                    //Le pongo el numero de reproducciones
+                    duracion.setText(anteriorCancion.getDuration());
+
+                    final ImageButton isFavorite = (ImageButton) PlayerFragment.this.getView().findViewById(R.id.favoritoCancion);
+
+                    if (anteriorCancion.getIsFavorite()) {
+                        isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    } else {
+                        isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    }
+                    // 5. Ponemos el listener del boton de favoritos
+                    isFavorite.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (anteriorCancion.getIsFavorite()) {
+                                //Ya no es favorito, cambiammos icono y guardamos en la BD
+                                isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                anteriorCancion.setIsFavorite(false, v.getContext());
+                            } else {
+                                //Ahora es favorito, cambiamos icono y guardamos en la BD
+                                isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                anteriorCancion.setIsFavorite(true, v.getContext());
+                            }
+                        }
+                    });
 
                     //Coger la cancion anterior del playlist de la BD
                     if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
-                    //incremento en 1 la reproducción de la cancion.
-                    mDb.incrementarReproduccionCancion(rutaAnteriorCancion);
                     try {
                         mediaPlayer.reset();
                         //Preparamos la cancion anterior como reproducible
@@ -229,35 +269,8 @@ public class PlayerFragment extends Fragment {
 
 
 
-            //Coger la cancion anterior del playlist de la BD
-            indiceCancionActual = getArguments().getInt(ARG_SONG);
-            Log.w("INDICE ", "INDICE " + indiceCancionActual);
-            int indiceSiguienteCancion = 0;
-            if (indiceCancionActual == canciones.size()-1){
-                indiceSiguienteCancion = 0;
-            }
-            else{
-                indiceSiguienteCancion = indiceCancionActual+1;
-            }
-            Song siguienteCancion = canciones.get(indiceSiguienteCancion);
-            Log.w("siguienteCancion ", "siguienteCancion " + siguienteCancion.getTitle());
-
-            final String rutaSiguienteCancion  = siguienteCancion.getPath();
-            Log.w("rutaSiguienteCancion ", "rutaSiguienteCancion " + rutaSiguienteCancion);
 
 
-
-            //TODO: ESTO NO FUNCIONA
-            if (siguiente){
-                //Le pongo el título
-                titulo_cancion.setText(siguienteCancion.getTitle());
-
-                //Le pongo el numero de reproducciones
-                subtitulo_cancion.setText("Reproducciones: " + siguienteCancion.getNum_reproductions());
-
-                //Le pongo el numero de reproducciones
-                duracion.setText(siguienteCancion.getDuration());
-            }
 
             //TODO: Boton para reproducir a la siguiente cancion
             botonSiguienteCancion = (ImageButton) view.findViewById(R.id.siguienteCancion);
@@ -265,14 +278,71 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    siguiente = true;
-
                     if(mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                     }
 
+                    //Coger la cancion anterior del playlist de la BD
+                    int indiceCancionActual = getArguments().getInt(ARG_SONG);
+                    Log.w("INDICE ", "INDICE " + indiceCancionActual);
+                    int indiceSiguienteCancion = 0;
+                    if (indiceCancionActual == canciones.size()-1){
+                        indiceSiguienteCancion = 0;
+                    }
+                    else{
+                        indiceSiguienteCancion = indiceCancionActual+1;
+                    }
+                    final Song siguienteCancion = canciones.get(indiceSiguienteCancion);
+                    Log.w("siguienteCancion ", "siguienteCancion " + siguienteCancion.getTitle());
+
+                    final String rutaSiguienteCancion  = siguienteCancion.getPath();
+                    Log.w("rutaSiguienteCancion ", "rutaSiguienteCancion " + rutaSiguienteCancion);
+                    if(!mDb.isOpen()) mDb.open();
                     //incremento en 1 la reproducción de la cancion.
                     mDb.incrementarReproduccionCancion(rutaSiguienteCancion);
+
+                    // titulo_cancion tiene el titulo de la cancion actual (nombre del archivo)
+                    titulo_cancion = (TextView) PlayerFragment.this.getView().findViewById(R.id.titulo_cancion_reproductor);
+
+                    //Le pongo el título
+                    titulo_cancion.setText(siguienteCancion.getTitle());
+
+                    // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+                    subtitulo_cancion = (TextView)  PlayerFragment.this.getView().findViewById(R.id.subtitulo_cancion_reproductor);
+
+                    //Le pongo el numero de reproducciones
+                    subtitulo_cancion.setText("Reproducciones: " + siguienteCancion.getNum_reproductions());
+
+                    // subtitulo_cancion tiene el subtitulo de la cancion actual (numero de reproducciones)
+                    duracion = (TextView) PlayerFragment.this.getView().findViewById(R.id.duracion);
+
+                    //Le pongo el numero de reproducciones
+                    duracion.setText(siguienteCancion.getDuration());
+
+                    final ImageButton isFavorite = (ImageButton) PlayerFragment.this.getView().findViewById(R.id.favoritoCancion);
+
+                    if (siguienteCancion.getIsFavorite()) {
+                        isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    } else {
+                        isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    }
+                    // 5. Ponemos el listener del boton de favoritos
+                    isFavorite.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (siguienteCancion.getIsFavorite()) {
+                                //Ya no es favorito, cambiammos icono y guardamos en la BD
+                                isFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                siguienteCancion.setIsFavorite(false, v.getContext());
+                            } else {
+                                //Ahora es favorito, cambiamos icono y guardamos en la BD
+                                isFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                siguienteCancion.setIsFavorite(true, v.getContext());
+                            }
+                        }
+                    });
+
+
                     try {
                         mediaPlayer.reset();
                         //Preparamos la cancion anterior como reproducible
@@ -294,14 +364,17 @@ public class PlayerFragment extends Fragment {
         }
 
 
-        botonListaPlaylist = (ImageButton) view.findViewById(R.id.botonListaPlaylist);
+        ImageButton botonListaPlaylist = (ImageButton) view.findViewById(R.id.botonListaPlaylist);
         botonListaPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //Obtenemos el playlist
                 Log.w("PRUEBA", "Estoy antes del if");
+
+                mediaPlayer.reset();
+
                 if (getArguments() == null || getArguments().getString(ARG_PLAYLIST) == null) {
-                    //Toast.makeText(getContext(),"ES NULL",Toast.LENGTH_SHORT).show();
                     PLAYLIST = "None";
                     Fragment f = new PlaylistsFragment();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -311,7 +384,6 @@ public class PlayerFragment extends Fragment {
                     POS = getArguments().getInt(ARG_SONG);
                     ORDER = getArguments().getString(ARG_ORDERBY);
 
-
                     Bundle args = new Bundle();
                     args.putString(SongsFragment.ARG_PLAYLIST, PLAYLIST);
                     SongsFragment f = new SongsFragment();
@@ -319,11 +391,6 @@ public class PlayerFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_frame, f).addToBackStack(null).commit();
 
-
-
-
-
-                    //Toast.makeText(getContext(),"PLAYLIST: "+PLAYLIST+"POSICION: "+POS+"" +"ORDENACION ",Toast.LENGTH_SHORT).show();
                     Log.w("VAMOS BIEN", "" + PLAYLIST);
                 }
 
