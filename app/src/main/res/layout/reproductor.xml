@@ -82,9 +82,9 @@
                 <TextView
                     android:id="@+id/titulo_cancion_reproductor"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingTop="10dp"
+                    android:paddingTop="5dp"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
@@ -104,9 +104,8 @@
                 <TextView
                     android:id="@+id/subtitulo_cancion_reproductor"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingTop="4dp"
                     android:textSize="18sp"
                     android:textStyle="italic"
                     android:textColor="#000000"
@@ -117,7 +116,6 @@
                     android:id="@+id/duracion"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingTop="4dp"
                     android:textSize="18sp"
                     android:textStyle="italic"
                     android:textColor="#000000"
@@ -146,10 +144,12 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/botones_reproduccion">
 
-            <TextView
+            <SeekBar
+                android:id="@+id/barra_tiempo"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#FFAA00" />
+                android:layout_height="16dp"
+                android:max="100"
+                android:progress="0"/>
         </RelativeLayout>
 
         <!-- BOTONES REPRODUCCION -->

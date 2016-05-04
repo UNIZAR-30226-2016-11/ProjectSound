@@ -2,6 +2,7 @@ package proyectosoftware.projectsound.Fragments;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,8 +22,9 @@ import proyectosoftware.projectsound.CustomAdapters.DbAdapter;
 import proyectosoftware.projectsound.CustomAdapters.SongAdapter;
 import proyectosoftware.projectsound.Factorys.SongFactory;
 import proyectosoftware.projectsound.R;
-import proyectosoftware.projectsound.Tipos.Playlist;
 import proyectosoftware.projectsound.Tipos.Song;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 /**
  * Fragmento para el contenido principal
@@ -52,6 +54,9 @@ public class PlayerFragment extends Fragment {
     private TextView titulo_cancion;
     private TextView subtitulo_cancion;
     private TextView duracion;
+
+    private SeekBar seekBar;
+    private Handler mHandler = new Handler();
 
     public PlayerFragment() {
     }
@@ -118,6 +123,7 @@ public class PlayerFragment extends Fragment {
             //Le pongo el numero de reproducciones
             duracion.setText(cancionActual.getDuration());
 
+            seekBar = (SeekBar) view.findViewById(R.id.barra_tiempo);
 
             final ImageButton isFavorite = (ImageButton) view.findViewById(R.id.favoritoCancion);
 
@@ -164,6 +170,7 @@ public class PlayerFragment extends Fragment {
 
             //Cuidado con este método que igual hace que no se pare la cancion nunca
             mediaPlayer.setLooping(true);
+            seekBar.setMax(mediaPlayer.getDuration());
 
             //TODO: Botón de play/pause
             play_button = (ImageButton) view.findViewById(R.id.play_button);
@@ -177,6 +184,41 @@ public class PlayerFragment extends Fragment {
                     else if(!mediaPlayer.isPlaying()){
                         play_button.setImageResource(R.drawable.ic_pause_black_24dp);
                         mediaPlayer.start();
+                        //Make sure you update Seekbar on UI thread
+                        getActivity().runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if(mediaPlayer != null){
+                                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                                    seekBar.setProgress(mCurrentPosition);
+                                }
+                                mHandler.postDelayed(this, 1000);
+                            }
+                        });
+
+                        // Barra de tiempo
+                        seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+                            boolean userTouch;
+
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                                if(mediaPlayer != null && userTouch){
+                                    mediaPlayer.seekTo(progressValue);
+                                    seekBar.animate();
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                userTouch = true;
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                userTouch = false;
+                            }
+                        });
                     }
                 }
             });
