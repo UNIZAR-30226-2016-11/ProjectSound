@@ -127,11 +127,9 @@ public class AddToPlayListFragment extends Fragment {
         try{
             /* Solo falta utilizar los metodos de la BBDD cuando este terminada*/
             for(int i=0;i<porAniadir.size();i++){
-                Log.d("A veeerrr",porAniadir.get(i).getTitle());
                 datos.insertToPlaylist(porAniadir.get(i).getPath(),playlist);
             }
             for(int i=0;i<porBorrar.size();i++){
-                Log.d("Conteoooo", porBorrar.get(i).getTitle());
                 datos.deleteFromPlaylist(porBorrar.get(i).getPath(),playlist);
             }
             Toast.makeText(getContext(),"Cambios guardados",Toast.LENGTH_LONG).show();
